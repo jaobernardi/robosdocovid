@@ -1,0 +1,10 @@
+{
+    "private_key": "/etc/letsencrypt/live/chatpls.live/privkey.pem",
+    "certificate": "/etc/letsencrypt/live/chatpls.live/fullchain.pem",
+    "host": "localhost",
+    "port": 80,
+    "scopes": {
+        "api": "api.robosdocovid.app",
+        "home": "localhost"
+    }
+}
