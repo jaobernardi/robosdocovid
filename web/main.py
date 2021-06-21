@@ -4,8 +4,8 @@ import events
 
 events.call_event("startup")
 config = Config()
-server = Server(config.host, config.port)
-server.http_start()
+server = Server(config.host, config.port, config.certificate, config.private_key)
+server.https_start()
 def shutdown(*args, **kwargs):
     server.stop()
     exit()
