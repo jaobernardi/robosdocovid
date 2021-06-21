@@ -2,9 +2,12 @@
     "private_key": "/etc/letsencrypt/live/robocovid.app/privkey.pem",
     "certificate": "/etc/letsencrypt/live/robocovid.app/fullchain.pem",
     "host": "localhost",
-    "port": 80,
+    "port": 443,
     "scopes": {
-        "api": "api.robosdocovid.app",
-        "home": "localhost"
+        "api": "api.robocovid.app",
+        "home": "robocovid.app",
+        "whatsapp": "whatsapp.robocovid.app",
+        "twitter": "twitter.robocovid.app",
+        "painel": "painel.robocovid.app"
     }
 }
