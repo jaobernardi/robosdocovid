@@ -1,6 +1,6 @@
 {
-    "private_key": "/etc/letsencrypt/live/chatpls.live/privkey.pem",
-    "certificate": "/etc/letsencrypt/live/chatpls.live/fullchain.pem",
+    "private_key": "/etc/letsencrypt/live/robocovid.app/privkey.pem",
+    "certificate": "/etc/letsencrypt/live/robocovid.app/fullchain.pem",
     "host": "localhost",
     "port": 80,
     "scopes": {
