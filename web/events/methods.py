@@ -3,11 +3,15 @@ from structures.wrappers import EventResponse
 events = {}
 super_handles = []
 
+
 def create_event(event_name):
 	events[event_name] = {}
 
+
 def super_handle(function):
+	# Super handles are supposed to listen for every event
 	super_handles.append(function)
+
 
 def add_handle(event_name, priority=0, function=None):
 	def wrapper(function):
