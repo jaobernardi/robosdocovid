@@ -9,5 +9,16 @@
         "whatsapp": "whatsapp.robocovid.app",
         "twitter": "twitter.robocovid.app",
         "painel": "painel.robocovid.app"
+    },
+    "database": {
+      "user": "",
+      "password": "",
+      "host": "",
+			"port": 3306,
+      "database": "",
+      "raise_on_warnings": true
+    },
+    "fields": {
+      "summable": ["cases", "deaths", "active_cases", "recovered", "vaccinated+(?:\\S+)?"]
     }
 }

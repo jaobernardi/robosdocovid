@@ -1,6 +1,6 @@
 # Handle requests for the 'API'
 import events
-from structures import Response, Config
+from structures import Response, Config, Database
 import json
 
 config = Config()
@@ -15,7 +15,21 @@ def api_http(event):
         if event.path[0] == "places":
             # Query data from the database
             if event.path == ["places", "query"]:
-                output = {"status": 500, "message": "Not Implemented", "error": True}
+				if request.method != "POST":
+					event.default_headers = event.default_headers | {'Allow': 'POST'}
+					output = {"status": 405, "message": "Method Not Allowed", "error": True}
+
+				elif 'Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json':
+					try:
+						data = json.loads(request.data.decode("utf-8"))
+					except:
+						output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+                	else:
+						with Database() as db:
+							query = db.get_place_data(data['ibge'], data['timestamp'] if 'timestamp' in data else None, True)
+							output = {"status": 200, "message": "OK", "error": False, "query": query[1]}
+				else:
+					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
             # Insert data into the database
             elif event.path == ["places", "insert"]:
