@@ -26,7 +26,7 @@ def api_http(event):
 					else:
 						with Database() as db:
 							query = db.get_place_data(data['ibge'], data['timestamp'], True)
-							output = {"status": 200, "message": "OK", "error": False, "query": query[1]}
+							output = {"status": 200, "message": "OK", "error": False, "query": query[0]}
 				else:
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
