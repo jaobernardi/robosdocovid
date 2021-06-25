@@ -12,9 +12,8 @@ def api_http(event):
 	# Check the request host
 	if "Host" in request.headers and request.headers["Host"] == config.scopes["api"]:
 		# Placeholder response
-		if event.path[0] == "places":
-			# Query data from the database
-			if event.path == ["places", "query"]:
+		match event.path:
+			case ["places", "query"]:
 				if request.method != "POST":
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
 					output = {"status": 405, "message": "Method Not Allowed", "error": True}
@@ -32,17 +31,18 @@ def api_http(event):
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
 			# Insert data into the database
-			elif event.path == ["places", "insert"]:
+			case ["places", "insert "]:
 					output = {"status": 500, "message": "Not Implemented", "error": True}
 
 			# Edit place data
-			elif event.path == ["places", "edit"]:
+			case ["places", "edit"]:
 					output = {"status": 500, "message": "Not Implemented", "error": True}
 
 			# Query the sources from the database
-			elif event.path == ["places", "sources"]:
+			case ["places", "sources"]:
 					output = {"status": 500, "message": "Not Implemented", "error": True}
-
+			case _:
+				output = {"status": 404, "message": "Not Found", "error": True}
 		jsonfied = json.dumps(output).encode()
 		return Response.make(
 			output["status"],
