@@ -18,16 +18,16 @@ def api_http(event):
                 output = {"status": 500, "message": "Not Implemented", "error": True}
 
             # Insert data into the database
-        elif event.path == ["places", "insert"]:
-                output = {"status": 500, "message": "Not Implemented", "error": True}
+            elif event.path == ["places", "insert"]:
+                    output = {"status": 500, "message": "Not Implemented", "error": True}
 
             # Edit place data
-        elif event.path == ["places", "edit"]:
-                output = {"status": 500, "message": "Not Implemented", "error": True}
+            elif event.path == ["places", "edit"]:
+                    output = {"status": 500, "message": "Not Implemented", "error": True}
 
             # Query the sources from the database
-        elif event.path == ["places", "sources"]:
-                output = {"status": 500, "message": "Not Implemented", "error": True}
+            elif event.path == ["places", "sources"]:
+                    output = {"status": 500, "message": "Not Implemented", "error": True}
 
         jsonfied = json.dumps(output).encode()
         return Response.make(
