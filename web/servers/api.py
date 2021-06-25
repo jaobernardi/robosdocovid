@@ -12,7 +12,23 @@ def api_http(event):
     # Check the request host
     if "Host" in request.headers and request.headers["Host"] == config.scopes["api"]:
         # Placeholder response
-        output = {"status": 200, "message": "OK", "error": False}
+        if path[0] == "place":
+            # Query data from the database
+            if path == ["place", "query"]:
+                output = {"status": 500, "message": "Not Implemented", "error": True}
+
+            # Insert data into the database
+            elif path == ["place", "insert"]:
+                output = {"status": 500, "message": "Not Implemented", "error": True}
+
+            # Edit place data
+            elif path == ["place", "edit"]:
+                output = {"status": 500, "message": "Not Implemented", "error": True}
+
+            # Query the sources from the database
+            elif path == ["place", "sources"]:
+                output = {"status": 500, "message": "Not Implemented", "error": True}
+
         jsonfied = json.dumps(output).encode()
         return Response.make(
             output["status"],
