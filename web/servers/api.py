@@ -4,6 +4,7 @@ from structures import Response, Config, Database
 import json
 
 config = Config()
+ibge = json.load(open('ibge.json', 'rb'))
 
 # Listen for http requests
 @events.add_handle("http_request")
@@ -26,9 +27,15 @@ def api_http(event):
 					else:
 						with Database() as db:
 							query = db.get_place_data(data['ibge'], data['timestamp'], True)
-							query = list(query[0])
-							query[-1] = query[-1].timestamp()
-							output = {"status": 200, "message": "OK", "error": False, "query": query}
+							query_parsed = {}
+							if len(query) > 0:
+								query_parsed = {
+									"data": json.loads(query[1]),
+									"source": query[2]
+									"timestamp": query[3].timestamp(),
+									"ibge_code": query[0]
+								} | ibge(str(query[0]))
+							output = {"status": 200, "message": "OK", "error": False, "query": query_parsed}
 				else:
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
