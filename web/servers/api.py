@@ -4,6 +4,7 @@ from structures import Response, Config, Database
 import json
 
 config = Config()
+ibge = json.load(open("ibge.json"))
 
 
 # Listen for http requests
