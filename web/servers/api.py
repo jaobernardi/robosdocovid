@@ -30,7 +30,6 @@ def api_http(event):
 								with Database() as db:
 									query = db.get_place_data(code, timestamp, True)
 									query_parsed = {}
-
 									if len(query) > 0:
 										query_parsed = {
 											"data": json.loads(query[1]),
