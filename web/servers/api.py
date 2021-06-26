@@ -32,7 +32,7 @@ def api_http(event):
 								with Database() as db:
 									ibge_data = parse_ibge(code)
 									# Force the code into a Integer to prevent unwanted queries.
-									query = db.get_place_data(int(code), float(timestamp))
+									query = db.get_place_data(int(code), float(timestamp) if timestamp else None)
 									query_parsed = []
 
 									for entry in query:
