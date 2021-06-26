@@ -23,17 +23,15 @@ class Database:
 	def __exit__(self, *args):
 		self.commit()
 
-	def get_place_data(self, ibge, timestamp=None, return_first=True):
+	def get_place_data(self, ibge, timestamp=None):
 		cursor = self.conn.cursor()
-		if timestamp:
-			cursor.execute(
-				"SELECT * FROM `data` WHERE `ibge`=%s and `insert_date`=%s ORDER BY `insert_date` DESC"+(" LIMIT 1" if return_first else ""),
-				(ibge, timestamp)
+		if not timestamp:
+			cursor.execute("SELECT a.ibge, a.data, a.source, a.insert_date FROM data a INNER JOIN (SELECT ibge, MAX(insert_date) insert_date FROM data GROUP BY ibge) b ON a.ibge = b.ibge AND a.insert_date = b.insert_date AND a.ibge LIKE %s;",
+			(ibge,)
 			)
 		else:
-			cursor.execute(
-				"SELECT * FROM `data` WHERE `ibge`=%s ORDER BY `insert_date` DESC"+(" LIMIT 1" if return_first else ""),
-				(ibge,)
+			cursor.execute("SELECT * FROM `data` WHERE `ibge` LIKE %s AND `insert_date`=%s",
+				(ibge, timestamp)
 			)
 		return [row for row in cursor]
 
@@ -52,5 +50,3 @@ class Database:
 			(data, ibge, timestamp)
 		)
 		return [row for row in cursor]
-
-	

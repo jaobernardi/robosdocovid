@@ -2,6 +2,7 @@
 import events
 from structures import Response, Config, Database
 import json
+from utils import parse_ibge
 
 config = Config()
 ibge = json.load(open("ibge.json"))
@@ -29,17 +30,21 @@ def api_http(event):
 						match data:
 							case {'code': code, 'timestamp': timestamp}:
 								with Database() as db:
-									query = db.get_place_data(code, timestamp, True)
-									query_parsed = {}
-									if len(query) > 0:
-										query = query[0]
-										query_parsed = {
-											"data": json.loads(query[1]),
-											"source": query[2],
-											"timestamp": query[3].timestamp(),
-											"ibge_code": query[0]
-										} | ibge[str(query[0])]
-									output = {"status": 200, "message": "OK", "error": False, "query": query_parsed}
+									ibge_data = parse_ibge(code)
+									# Force the code into a Integer to prevent unwanted queries.
+									query = db.get_place_data(int(code), float(timestamp))
+									query_parsed = []
+
+									for entry in query:
+										query_parsed.append({
+											"data": json.loads(entry[1]),
+											"source": entry[2],
+											"ibge_code": code,
+											"timestamp": entry[3].timestamp(),
+											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{query[0]}?formato=application/vnd.geo+json"
+										} | ibge_data)
+
+									output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query_parsed}
 							case _:
 								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 				else:
