@@ -34,7 +34,7 @@ def api_http(event):
 									"source": query[2],
 									"timestamp": query[3].timestamp(),
 									"ibge_code": query[0]
-								} | ibge(str(query[0]))
+								} | ibge[str(query[0])]
 							output = {"status": 200, "message": "OK", "error": False, "query": query_parsed}
 				else:
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
