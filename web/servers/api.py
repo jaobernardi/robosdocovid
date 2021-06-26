@@ -41,7 +41,7 @@ def api_http(event):
 											"source": entry[2],
 											"ibge_code": code,
 											"timestamp": entry[3].timestamp(),
-											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{query[0]}?formato=application/vnd.geo+json"
+											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{entry[0]}?formato=application/vnd.geo+json"
 										} | ibge_data)
 
 									output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query_parsed}
