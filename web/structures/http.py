@@ -4,7 +4,8 @@ import socket
 from time import time
 from urllib.parse import unquote
 import ssl
-
+import sys
+import traceback
 
 # HTTPS Server class
 class Server(object):
@@ -76,7 +77,9 @@ class Server(object):
 			if event.response:
 				conn.send(event.response)
 		except Exception as e:
-			print(e)
+		    exc_type, exc_value, exc_traceback = sys.exc_info()
+		    print("*** print_tb:")
+		    traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
 		conn.close()
 
 		pass
