@@ -1,4 +1,8 @@
 {
+	  "0": {
+			"name": "Brasil",
+			"type": "country"
+		},
     "35": {
         "name": "S\u00e3o Paulo",
         "type": "state"
