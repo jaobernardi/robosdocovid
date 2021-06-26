@@ -31,7 +31,7 @@ def api_http(event):
 							if len(query) > 0:
 								query_parsed = {
 									"data": json.loads(query[1]),
-									"source": query[2]
+									"source": query[2],
 									"timestamp": query[3].timestamp(),
 									"ibge_code": query[0]
 								} | ibge(str(query[0]))
