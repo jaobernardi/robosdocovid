@@ -77,6 +77,7 @@ def api_http(event):
 					else:
 						match data:
 							case {'agent': username, 'code': code}:
+								with Database() as db:
 									query = db.get_user(str(username))
 									output = {"status": 403, "message": "Unauthorized", "error": True}
 									if query:
