@@ -76,14 +76,7 @@ def api_http(event):
 										for entry in query:
 											query_parsed.append({
 												"data": json.loads(entry[1]),
-																		for entry in query:
-											query_parsed.append({
-												"data": json.loads(entry[1]),
 												"source": entry[2],
-												"ibge_code": code,
-												"timestamp": entry[3].timestamp(),
-												"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{entry[0]}?formato=application/vnd.geo+json"
-											} | ibge_data)				"source": entry[2],
 												"ibge_code": code,
 												"timestamp": entry[3].timestamp(),
 												"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{entry[0]}?formato=application/vnd.geo+json"
