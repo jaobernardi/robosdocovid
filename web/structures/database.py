@@ -53,7 +53,7 @@ class Database:
 
 	def get_user_by_token(self, token):
 		cursor = self.conn.cursor()
-		cursor.execute("SELECT * FROM `auth` WHERE `issued_token`=%s",
+		cursor.execute("SELECT * FROM `auth` WHERE `issued_tokens`=%s",
 			(token,)
 		)
 		return [row for row in cursor]
@@ -61,7 +61,7 @@ class Database:
 	def edit_user_token(self, user, token, timestamp):
 		cursor = self.conn.cursor()
 		cursor.execute(
-			"UPDATE `auth` SET `token`=%s `token_issue_date`=%s WHERE `username`=%s",
+			"UPDATE `auth` SET `issued_tokens`=%s `token_issue_date`=%s WHERE `username`=%s",
 			(token, timestamp, user)
 		)
 		return [row for row in cursor]
