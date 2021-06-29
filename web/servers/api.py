@@ -53,8 +53,47 @@ def api_http(event):
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
 			# Insert data into the database
-			case ["places", "insert "]:
-					output = {"status": 500, "message": "Not Implemented", "error": True}
+			case ["places", "insert"]:
+				if request.method != "POST":
+					event.default_headers = event.default_headers | {'Allow': 'POST'}
+					output = {"status": 405, "message": "Method Not Allowed", "error": True}
+
+				elif 'Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json':
+					try:
+						data = json.loads(request.data.decode("utf-8"))
+					except:
+						output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+					else:
+						match data:
+							case {'code': code, 'parameter': parameter, 'data': data, 'source': source, 'token': token, 'timestamp': timestamp}:
+								with Database() as db:
+									output = {"status": 403, "message": "Unauthorized", "error": True}
+									user = db.get_user_by_token(token)
+									if user:
+										query = db.insert_place_data(int(code), json.dumps(data), source, datetime.utcfromtimestamp(timestamp))
+										query_parsed = []
+
+										for entry in query:
+											query_parsed.append({
+												"data": json.loads(entry[1]),
+																		for entry in query:
+											query_parsed.append({
+												"data": json.loads(entry[1]),
+												"source": entry[2],
+												"ibge_code": code,
+												"timestamp": entry[3].timestamp(),
+												"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{entry[0]}?formato=application/vnd.geo+json"
+											} | ibge_data)				"source": entry[2],
+												"ibge_code": code,
+												"timestamp": entry[3].timestamp(),
+												"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{entry[0]}?formato=application/vnd.geo+json"
+											} | ibge_data)
+
+										output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query_parsed}
+							case _:
+								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+				else:
+					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
 			# Edit place data
 			case ["places", "edit"]:
@@ -63,6 +102,7 @@ def api_http(event):
 			# Query the sources from the database
 			case ["places", "sources"]:
 					output = {"status": 500, "message": "Not Implemented", "error": True}
+
 
 			case ['auth', 'connect']:
 				if request.method != "POST":
