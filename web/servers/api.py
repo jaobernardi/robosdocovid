@@ -86,7 +86,7 @@ def api_http(event):
 										if two_factor.verify(str(code)):
 											token = generate_string(32)
 											db.edit_user_token(user[0], token, datetime.now())
-											output = {"status": 200, "message": "OK", "error": false, "token": token}
+											output = {"status": 200, "message": "OK", "error": False, "token": token}
 							case _:
 								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 				else:
