@@ -61,7 +61,7 @@ class Database:
 	def edit_user_token(self, user, token, timestamp):
 		cursor = self.conn.cursor()
 		cursor.execute(
-			"UPDATE `auth` SET `issued_tokens`=%s `token_issue_date`=%s WHERE `username`=%s",
+			"UPDATE `auth` SET `issued_tokens`=%s, `token_issue_date`=%s WHERE `username`=%s",
 			(token, timestamp, user)
 		)
 		return [row for row in cursor]
