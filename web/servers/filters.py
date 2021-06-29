@@ -28,8 +28,8 @@ def fallback_http(event):
 		"Access-Control-Allow-Origin": "*"
 	}
 	return Response.make(
-		200,
-		'OK',
+		400,
+		'Bad Request',
 		default_headers,
-		f"If you're reading this, you fucked up.\nHeaders: {request.headers}\nQuery string: {request.query_string}\nData: {request.data}".encode()
+		f"400 Bad Request.\nrobosdocovid/1.0\nHeaders: {request.headers}\nQuery string: {request.query_string}\nData: {request.data}".encode()
 	)

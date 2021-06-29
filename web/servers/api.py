@@ -2,7 +2,9 @@
 import events
 from structures import Response, Config, Database
 import json
-from utils import parse_ibge
+import pyotp
+from datetime import datetime
+from utils import parse_ibge, generate_string
 
 config = Config()
 ibge = json.load(open("ibge.json"))
@@ -61,6 +63,35 @@ def api_http(event):
 			# Query the sources from the database
 			case ["places", "sources"]:
 					output = {"status": 500, "message": "Not Implemented", "error": True}
+
+			case ['auth', 'connect']:
+				if request.method != "POST":
+					event.default_headers = event.default_headers | {'Allow': 'POST'}
+					output = {"status": 405, "message": "Method Not Allowed", "error": True}
+
+				elif 'Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json':
+					try:
+						data = json.loads(request.data.decode("utf-8"))
+					except:
+						output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+					else:
+						match data:
+							case {'agent': username, 'code': code}:
+									query = db.get_user(str(username))
+									output = {"status": 403, "message": "Unauthorized", "error": True}
+									if query:
+										user = query[0]
+										two_factor = pyotp.TOTP(user[2])
+										if two_factor.verify(str(code)):
+											token = generate_string(32)
+											db.edit_user_token(user[0], token, datetime.now())
+											output = {"status": 200, "message": "OK", "error": false, "token": token}
+							case _:
+								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+				else:
+					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+
+
 			case _:
 				output = {"status": 404, "message": "Not Found", "error": True}
 		jsonfied = json.dumps(output).encode()
