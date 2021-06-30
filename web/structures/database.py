@@ -43,11 +43,11 @@ class Database:
 		)
 		return [row for row in cursor]
 
-	def edit_place_data(self, ibge, data, timestamp):
+	def edit_place_data(self, ibge, data, source, timestamp):
 		cursor = self.conn.cursor()
 		cursor.execute(
-			"UPDATE `data` SET `data`=%s WHERE `ibge`=%s AND `insert_date`=%s",
-			(data, ibge, timestamp)
+			"UPDATE `data` SET `data`=%s `source`=%s WHERE `ibge`=%s AND `insert_date`=%s",
+			(data, source, ibge, timestamp)
 		)
 		return [row for row in cursor]
 

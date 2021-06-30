@@ -106,7 +106,7 @@ def api_http(event):
 									output = {"status": 403, "message": "Unauthorized", "error": True}
 									user = db.get_user_by_token(token)
 									if user:
-										query = db.edit_place_data(int(code), json.dumps(data), datetime.utcfromtimestamp(timestamp))
+										query = db.edit_place_data(int(code), json.dumps(data), source, datetime.utcfromtimestamp(timestamp))
 										query_parsed = []
 
 										for entry in query:
