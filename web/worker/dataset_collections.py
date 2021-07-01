@@ -3,6 +3,7 @@ from utils import find_ibge
 from structures import Database
 from datetime import datetime
 import json
+import urllib.request
 
 def sanitize(string, split, autotype):
 	unqouted = [i.removeprefix('"').removesuffix('"') for i in string.split(split)]
@@ -21,6 +22,23 @@ def case_type(input):
 		return "DEAD"
 	return "ACTIVE"
 
+def case_type_sc(recovered, dead):
+	if "sim" in recovered.lower():
+		return "RECOVERED"
+	elif "sim" in dead.lower():
+		return "DEAD"
+	return "ACTIVE"
+
+def read_until_line(file_object, split=";", autotype=False):
+	while True:
+			output = ""
+			while (data := file_object.read(1)) != "\n":
+				if not data:
+					return
+				output += data
+			if not data:
+				return
+			yield sanitize(output[:-1], split, autotype)
 
 def RS_Collect():
 	output = {}
@@ -34,7 +52,6 @@ def RS_Collect():
 	# read cases in the notification csv
 	for case in reader:
 		case = sanitize(case.decode('utf-8'), ";", False)
-
 		if len(case) > 1:
 			city = find_ibge(case[1]+"+43")
 			if not city: print(case[1])
@@ -57,6 +74,7 @@ def RS_Collect():
 				output[city]["active_cases"] += 1
 				output[43]["active_cases"] += 1
 
+
 	data = requests.get("https://secweb.procergs.com.br/isus-covid/api/v1/markers/municipios")
 	if data.status_code == 200:
 		data = data.json()
@@ -68,7 +86,6 @@ def RS_Collect():
 				output[name]["beds_uti_adult_private"] = city["beds"]["adultsPrivado"]["percent"]
 				output[name]["beds_covid"] = city["beds"]["others"]["percent"]
 				output[name]["respirators"] = city["beds"]["respirators"]["percent"]
-
 
 	vaccines = requests.get("https://iede.rs.gov.br/server/rest/services/COVID19/perc_doses_aplic_por_disponibilizadas/FeatureServer/0/query?f=json&where=1=1&returnGeometry=false&outFields=*", verify=False)
 	if vaccines.status_code == 200:
@@ -98,5 +115,37 @@ def RS_Collect():
 	with Database() as db:
 		for city in output:
 			db.insert_place_data(city, json.dumps(output[city]), 'Secretaria Estadual de Saúde do Rio Grande do Sul.', now)
-			print(city)
+	return output
+
+
+def SC_Collect():
+	output = {}
+	output[42] = {"cases": 0, "deaths": 0, "active_cases": 0, "recovered": 0}
+	req = urllib.request.urlretrieve("http://ftp2.ciasc.gov.br/boavista_covid_dados_abertos.csv")
+	reader = read_until_line(open(req[0], encoding="utf-8"))
+	next(reader)
+
+
+	for case in reader:
+		city = int(case[17])
+		state = case_type_sc(case[1], case[11])
+		if city.upper() not in output:
+			# Insert place
+			output[city] = {"cases": 0, "deaths": 0, "recovered": 0, "active_cases": 0}
+
+
+		output[city]["cases"] += 1
+		output[42]["cases"] += 1
+		if state == "DEAD":
+			output[city]["deaths"] += 1
+			output[42]["deaths"] += 1
+		elif state == "RECOVERED":
+			output[city]["recovered"] += 1
+			output[42]["recovered"] += 1
+		else:
+			output[city]["active_cases"] += 1
+			output[42]["active_cases"] += 1
+	with Database() as db:
+		for city in output:
+			db.insert_place_data(city, json.dumps(output[city]), 'Secretaria Estadual de Saúde do Rio Grande do Sul.', now)
 	return output
