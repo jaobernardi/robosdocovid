@@ -123,6 +123,7 @@ def SC_Collect():
 	output[42] = {"cases": 0, "deaths": 0, "active_cases": 0, "recovered": 0}
 	req = urllib.request.urlretrieve("http://ftp2.ciasc.gov.br/boavista_covid_dados_abertos.csv")
 	reader = read_until_line(open(req[0], encoding="utf-8"))
+	now = datetime.now()
 	print("reading from file")
 	next(reader)
 
