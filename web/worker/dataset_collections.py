@@ -129,7 +129,7 @@ def SC_Collect():
 	for case in reader:
 		city = int(case[17])
 		state = case_type_sc(case[1], case[11])
-		if city.upper() not in output:
+		if city not in output:
 			# Insert place
 			output[city] = {"cases": 0, "deaths": 0, "recovered": 0, "active_cases": 0}
 
