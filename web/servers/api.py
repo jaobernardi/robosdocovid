@@ -32,8 +32,8 @@ def api_http(event):
 						match data:
 							case {'code': code, 'timestamp': timestamp}:
 								with Database() as db:
-									code = int(code)
 									ibge_data = parse_ibge(code)
+									code = int(code)
 
 									query = db.get_place_data(f"{code}%" if code != 0 else "%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
 									datas = []
