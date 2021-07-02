@@ -1,7 +1,7 @@
 import requests
 from utils import find_ibge
 from structures import Database
-from datetime import datetime
+from datetime import *
 import json
 import urllib.request
 
@@ -14,6 +14,31 @@ def sanitize(string, split, autotype):
 					continue
 			output.append(piece)
 	return output
+
+def find_pr_url():
+	possible = [
+		"https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/%Y-%m/INFORME_EPIDEMIOLOGICO_%d_%m_OBITOS_CASOS_Municipio.csv",
+		"https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/%Y-%m/informe_epidemiologico_%d_%m_%Y_obitos_casos_municipio.csv",
+		"https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/%Y-%m/informe_epidemiologico_%d_%m_obitos_casos_municipio.csv",
+		"https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/%Y-%m/informe_epidemiologico_%d_%m_casos_obitos_municipio.csv",
+		"https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/%Y-%m/informe_epidemiologico_%d_%m_obitos_casos_municipios.csv",
+		"https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/%Y-%m/informe_epidemiologico_%d_%m_casos_obitos_municipios.csv",
+		"https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/%Y-%m/informe_epidemiologico_%d_%m_%Y_obitos_casos_municipios.csv",
+		"https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/%Y-%m/INFORME_EPIDEMIOLOGICO_%d_%m_%Y_OBITOS_CASOS_Municipio.csv"
+	]
+	now = datetime.now()
+	f = datetime.strftime(now, possible[0])
+	req = requests.head(f)
+	while req.status_code != 200:
+		for i in possible:
+			if req.status_code == 200:
+				break
+			f = datetime.strftime(now, i)
+			req = requests.head(f)
+		if req.status_code == 200:
+			break
+		now -= timedelta(days=1)
+	return f
 
 def case_type(input):
 	if "recuperado" in input.lower():
@@ -39,6 +64,25 @@ def read_until_line(file_object, split=";", autotype=False):
 			if not data:
 				return
 			yield sanitize(output[:-1], split, autotype)
+
+def PR_Collect():
+	output = {}
+	req = requests.get(find_pr_url(), stream=True)
+	reader = req.iter_lines()
+	now = datetime.now()
+	next(reader)
+	# read cases in the notification csv
+	for case in reader:
+		case = sanitize(case.decode('utf-8'), ";", False)
+		if len(case) > 1:
+			city = int(case[0])
+			output[city] = {"cases": int(case[4]), "deaths": int(case[5]), "recovered": int(case[6]), "active_cases": int(case[4])-int(case[5])-int(case[6])}
+	with Database() as db:
+		for city in output:
+			print(city)
+			db.insert_place_data(city, json.dumps(output[city]), 'Secretaria Estadual de Saúde do Paraná.', now)
+	return output
+
 
 def RS_Collect():
 	output = {}
