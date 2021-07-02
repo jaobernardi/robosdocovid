@@ -34,31 +34,26 @@ def api_http(event):
 								with Database() as db:
 									code = int(code)
 									ibge_data = parse_ibge(code)
-									final_data = []
-									match ibge_data:
-										case {"type": "country"} | {"type": "region"} | {"type": "state"}:
-											query = db.get_place_data(f"{code}%" if code != 0 else "%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
-											datas = []
-											sources = []
-											timestamps = []
-											for entry in query:
-												datas.append(json.loads(entry[1]))
-												if entry[2] not in sources:
-													sources.append(entry[2])
-												if entry[3].timestamp() not in timestamps:
-													timestamps.append(entry[3].timestamp())
-											final_data = union_dicts_with_regex(config.fields["summable"]['default'], datas)
-										case _:
-											query = db.get_place_data(int(code), datetime.utcfromtimestamp(timestamp) if timestamp else None)
-											final_data = query[1]
-											sources = [query[2]]
-											timestamps = [query[3]]
+
+									query = db.get_place_data(f"{code}%" if code != 0 else "%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
+									datas = []
+									sources = []
+									timestamps = []
+									for entry in query:
+										datas.append(json.loads(entry[1]))
+										if entry[2] not in sources:
+											sources.append(entry[2])
+										if entry[3].timestamp() not in timestamps:
+											timestamps.append(entry[3].timestamp())
+									datas = union_dicts_with_regex(config.fields["summable"]['default'], datas)
+
+
 									output = {"status": 200,
 										"message": "OK",
 										"error": False,
 										"results": len(query),
 										"query": {
-											"data": final_data,
+											"data": datas,
 											"sources": sources,
 											"ibge_code": code,
 											"timestamps": timestamps,
