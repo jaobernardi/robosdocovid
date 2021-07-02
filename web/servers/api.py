@@ -51,9 +51,8 @@ def api_http(event):
 											"source": 'Not Implemented',
 											"ibge_code": code,
 											"timestamp": "Not Implemented",
-											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{entry[0]}?formato=application/vnd.geo+json",
-											*ibge_data
-											}
+											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{code}?formato=application/vnd.geo+json",											
+											} | ibge_data
 										}
 							case _:
 								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
