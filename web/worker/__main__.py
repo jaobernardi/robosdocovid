@@ -1,4 +1,4 @@
-from .dataset_collection import PR_Collect, SC_Collect, RS_Collect
+from .dataset_collections import PR_Collect, SC_Collect, RS_Collect
 
 def main():
 	PR_Collect()
