@@ -45,8 +45,10 @@ def api_http(event):
 											sources.append(entry[2])
 										if entry[3].timestamp() not in timestamps:
 											timestamps.append(entry[3].timestamp())
-									datas = union_dicts_with_regex(config.fields["summable"]['default'], datas)
-
+									if ibge[type] != "city":
+										datas = union_dicts_with_regex(config.fields["summable"]['default'], datas)
+									else:
+										datas = datas[0]
 
 									output = {"status": 200,
 										"message": "OK",
