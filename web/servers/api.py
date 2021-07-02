@@ -38,7 +38,15 @@ def api_http(event):
 									match ibge_data:
 										case {"type": "country"} | {"type": "region"} | {"type": "state"}:
 											query = db.get_place_data(f"{code}%" if code != 0 else "%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
-											datas = [json.loads(entry[1]) for entry in query]
+											datas = []
+											sources = []
+											timestamps = []
+											for entry in query:
+												datas.append(json.loads(entry[1]))
+												if entry[2] not in sources:
+													sources.append(entry[2])
+												if entry[3].timestamp() not in timestamps:
+													timestamps.append(entry[3].timestamp())
 											final_data = union_dicts_with_regex(config.fields["summable"]['default'], datas)
 										case _:
 											query = db.get_place_data(int(code), datetime.utcfromtimestamp(timestamp) if timestamp else None)
@@ -49,9 +57,9 @@ def api_http(event):
 										"results": len(query),
 										"query": {
 											"data": final_data,
-											"source": 'Not Implemented',
+											"sources": sources,
 											"ibge_code": code,
-											"timestamp": "Not Implemented",
+											"timestamps": timestamps,
 											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{code}?formato=application/vnd.geo+json",
 											} | ibge_data
 										}
