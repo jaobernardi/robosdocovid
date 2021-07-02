@@ -50,7 +50,9 @@ def api_http(event):
 											final_data = union_dicts_with_regex(config.fields["summable"]['default'], datas)
 										case _:
 											query = db.get_place_data(int(code), datetime.utcfromtimestamp(timestamp) if timestamp else None)
-
+											final_data = query[1]
+											sources = [query[2]]
+											timestamps = [query[3]]
 									output = {"status": 200,
 										"message": "OK",
 										"error": False,
