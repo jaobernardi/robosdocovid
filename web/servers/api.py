@@ -4,7 +4,7 @@ from structures import Response, Config, Database
 import json
 import pyotp
 from datetime import datetime
-from utils import parse_ibge, generate_string
+from utils import parse_ibge, generate_string, union_dicts_with_regex
 
 config = Config()
 ibge = json.load(open("ibge.json"))
@@ -33,20 +33,28 @@ def api_http(event):
 							case {'code': code, 'timestamp': timestamp}:
 								with Database() as db:
 									ibge_data = parse_ibge(code)
-									# Force the code into a Integer to prevent unwanted queries.
-									query = db.get_place_data(int(code), datetime.utcfromtimestamp(timestamp) if timestamp else None)
-									query_parsed = []
+									final_data = []
+									match ibge_data:
+										case {"type": "country"} | {"type": "region"} | {"type": "country"}:
+											query = db.get_place_data(f"{int(code)}%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
+											datas = [json.loads(entry[1]) for entry in query]
+											final_data = union_dicts_with_regex(config.summable['default'], datas)
+										case _:
+											query = db.get_place_data(int(code), datetime.utcfromtimestamp(timestamp) if timestamp else None)
 
-									for entry in query:
-										query_parsed.append({
-											"data": json.loads(entry[1]),
-											"source": entry[2],
+									output = {"status": 200,
+										"message": "OK",
+										"error": False,
+										"results": len(query),
+										"query": {
+											"data": final_data,
+											"source": 'Not Implemented',
 											"ibge_code": code,
-											"timestamp": entry[3].timestamp(),
-											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{entry[0]}?formato=application/vnd.geo+json"
-										} | ibge_data)
-
-									output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query_parsed}
+											"timestamp": "Not Implemented",
+											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{entry[0]}?formato=application/vnd.geo+json",
+											*ibge_data
+											}
+										}
 							case _:
 								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 				else:

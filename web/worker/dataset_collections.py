@@ -47,8 +47,6 @@ def RS_Collect():
 	now = datetime.now()
 	next(reader)
 
-	# Generate the State place object
-	output[43] = {"cases": 0, "deaths": 0, "recovered": 0, "active_cases": 0}
 	# read cases in the notification csv
 	for case in reader:
 		case = sanitize(case.decode('utf-8'), ";", False)
@@ -63,16 +61,12 @@ def RS_Collect():
 				output[city] = {"cases": 0, "deaths": 0, "recovered": 0, "active_cases": 0}
 
 			output[city]["cases"] += 1
-			output[43]["cases"] += 1
 			if state == "DEAD":
 				output[city]["deaths"] += 1
-				output[43]["deaths"] += 1
 			elif state == "RECOVERED":
 				output[city]["recovered"] += 1
-				output[43]["recovered"] += 1
 			else:
 				output[city]["active_cases"] += 1
-				output[43]["active_cases"] += 1
 
 
 	data = requests.get("https://secweb.procergs.com.br/isus-covid/api/v1/markers/municipios")
@@ -120,7 +114,6 @@ def RS_Collect():
 
 def SC_Collect():
 	output = {}
-	output[42] = {"cases": 0, "deaths": 0, "active_cases": 0, "recovered": 0}
 	req = urllib.request.urlretrieve("http://ftp2.ciasc.gov.br/boavista_covid_dados_abertos.csv")
 	reader = read_until_line(open(req[0], encoding="utf-8"))
 	now = datetime.now()
@@ -137,16 +130,12 @@ def SC_Collect():
 
 
 		output[city]["cases"] += 1
-		output[42]["cases"] += 1
 		if state == "DEAD":
 			output[city]["deaths"] += 1
-			output[42]["deaths"] += 1
 		elif state == "RECOVERED":
 			output[city]["recovered"] += 1
-			output[42]["recovered"] += 1
 		else:
 			output[city]["active_cases"] += 1
-			output[42]["active_cases"] += 1
 	with Database() as db:
 		for city in output:
 			db.insert_place_data(city, json.dumps(output[city]), 'Secretaria Estadual de Saúde de Santa Catarina.', now)
