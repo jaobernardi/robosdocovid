@@ -32,11 +32,12 @@ def api_http(event):
 						match data:
 							case {'code': code, 'timestamp': timestamp}:
 								with Database() as db:
+									code = int(code)
 									ibge_data = parse_ibge(code)
 									final_data = []
 									match ibge_data:
 										case {"type": "country"} | {"type": "region"} | {"type": "state"}:
-											query = db.get_place_data(f"{int(code)}%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
+											query = db.get_place_data(f"{code}%" if code != 0 else "%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
 											datas = [json.loads(entry[1]) for entry in query]
 											final_data = union_dicts_with_regex(config.fields["summable"]['default'], datas)
 										case _:
