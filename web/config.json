@@ -20,9 +20,9 @@
     },
     "fields": {
       "summable": {
-				"default": "(?:deaths)?(?:cases)?",
-				"43": "(?:cases)?(?:deaths)?(?:active_cases)?(?:recovered)?",
-				"42": "(?:cases)?(?:deaths)?(?:active_cases)?(?:recovered)?"
+				"default": "(deaths)|(cases)",
+				"43": "(cases)|(deaths)|(active_cases)|(recovered)",
+				"42": "(cases)|(deaths)|(active_cases)|(recovered)"
 
     }
 	}
