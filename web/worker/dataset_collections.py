@@ -65,6 +65,29 @@ def read_until_line(file_object, split=";", autotype=False):
 				return
 			yield sanitize(output[:-1], split, autotype)
 
+def National_Collect():
+	req = requests.get("http://plataforma.saude.gov.br/coronavirus/covid-19/resources/scripts/summary.js").content[12:]
+	data = json.loads(req)
+	now = datetime.now()
+	output = {}
+	for region in data['country']['regions']:
+		if region['uid'] == 4: continue
+		state_loop = 0
+		for state in region['states']:
+			state_loop += 1
+			print(f"{state_loop}/{len(region['states'])}")
+			for city in state['cities']:
+				name = find_ibge(f"{city['txt']}+{state['uid']}")
+				if not name:
+					print(f"FAILED! {city['txt']}, {state['sgl']}")
+					continue
+				output[name] = {"cases": city['vls'][0], 'deaths': city['vls'][6]}
+	with Database() as db:
+		for city in output:
+			print(city)
+			db.insert_place_data(city, json.dumps(output[city]), 'Ministério da Saúde', now)
+	return output
+
 def PR_Collect():
 	output = {}
 	req = requests.get(find_pr_url(), stream=True)
