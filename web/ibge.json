@@ -1821,6 +1821,7 @@
     },
     "2401305": {
         "name": "Augusto Severo (Campo Grande)",
+				"alias": ["Augusto Severo", "Campo Grande"],
         "type": "city"
     },
     "4301552": {
@@ -2456,7 +2457,7 @@
         "type": "city"
     },
     "2601607": {
-        "name": "Bel\u00e9m do S\u00e3o Francisco",
+        "name": "Bel\u00e9m de S\u00e3o Francisco",
         "type": "city"
     },
     "3300456": {
@@ -3157,6 +3158,7 @@
     },
     "3108909": {
         "name": "Braz\u00f3polis",
+				"alias": ["Bras\u00f3polis"],
         "type": "city"
     },
     "2602407": {
@@ -5872,7 +5874,7 @@
         "type": "city"
     },
     "1706001": {
-        "name": "Couto Magalh\u00e3es",
+        "name": "Couto de Magalh\u00e3es",
         "type": "city"
     },
     "4305975": {
@@ -6696,7 +6698,7 @@
         "type": "city"
     },
     "1502954": {
-        "name": "Eldorado do Caraj\u00e1s",
+        "name": "Eldorado dos Caraj\u00e1s",
         "type": "city"
     },
     "4306767": {
@@ -6737,6 +6739,7 @@
     },
     "3515004": {
         "name": "Embu das Artes",
+				"alias": ["Embu"],
         "type": "city"
     },
     "3515103": {
@@ -8745,6 +8748,7 @@
     },
     "2606903": {
         "name": "Iguaracy",
+				"alias": ["Iguaraci"],
         "type": "city"
     },
     "3130309": {
@@ -9544,7 +9548,7 @@
         "type": "city"
     },
     "2306306": {
-        "name": "Itapaj\u00e9",
+        "name": "Itapag\u00e9",
         "type": "city"
     },
     "2916104": {
@@ -10189,6 +10193,7 @@
     },
     "2405306": {
         "name": "Janu\u00e1rio Cicco (Boa Sa\u00fade)",
+				"alias": ["Januário Cicco", "Boa Saúde"],
         "type": "city"
     },
     "3135308": {
@@ -10525,6 +10530,7 @@
     },
     "2513653": {
         "name": "Joca Claudino",
+				"alias": ["Santarém"],
         "type": "city"
     },
     "2205458": {
@@ -10865,6 +10871,7 @@
     },
     "2608503": {
         "name": "Lagoa de Itaenga",
+				"alias": ["Lagoa do Itaenga"],
         "type": "city"
     },
     "2406304": {
@@ -12557,6 +12564,7 @@
     },
     "3530805": {
         "name": "Mogi Mirim",
+				"alias": ["Moji Mirim"],
         "type": "city"
     },
     "5213400": {
@@ -13881,6 +13889,7 @@
     },
     "3145455": {
         "name": "Olhos d'\u00c1gua",
+				"alias": ["Olhos-d'Água"],
         "type": "city"
     },
     "3533908": {
@@ -14533,6 +14542,7 @@
     },
     "3303807": {
         "name": "Paraty",
+				"alias": ["Parati"],
         "type": "city"
     },
     "2408706": {
@@ -16085,6 +16095,7 @@
     },
     "5107008": {
         "name": "Poxor\u00e9u",
+				"alias": ["Poxor\u00e9o"],
         "type": "city"
     },
     "3540853": {
@@ -17764,7 +17775,7 @@
         "type": "city"
     },
     "1506500": {
-        "name": "Santa Izabel do Par\u00e1",
+        "name": "Santa Isabel do Par\u00e1",
         "type": "city"
     },
     "3157708": {
@@ -18524,7 +18535,7 @@
         "type": "city"
     },
     "2613107": {
-        "name": "S\u00e3o Caetano",
+        "name": "S\u00e3o Caitano",
         "type": "city"
     },
     "1507102": {
@@ -18569,6 +18580,7 @@
     },
     "2513968": {
         "name": "S\u00e3o Domingos",
+				"alias": ["São Domingos de Pombal"],
         "type": "city"
     },
     "2806800": {
@@ -19385,6 +19397,7 @@
     },
     "3550001": {
         "name": "S\u00e3o Luiz do Paraitinga",
+				"alias": ["S\u00e3o Luis do Paraitinga"],
         "type": "city"
     },
     "4318903": {
@@ -19776,7 +19789,7 @@
         "type": "city"
     },
     "1720499": {
-        "name": "S\u00e3o Val\u00e9rio",
+        "name": "S\u00e3o Val\u00e9rio da Natividade",
         "type": "city"
     },
     "4319737": {
@@ -19801,6 +19814,7 @@
     },
     "2515401": {
         "name": "S\u00e3o Vicente do Serid\u00f3",
+				"alias": ["Seridó"],
         "type": "city"
     },
     "4319802": {
@@ -20101,6 +20115,7 @@
     },
     "2410306": {
         "name": "Serra Caiada",
+				"alias": ["Presidente Juscelino"],
         "type": "city"
     },
     "2515609": {
@@ -20597,6 +20612,7 @@
     },
     "2516409": {
         "name": "Tacima",
+				"alias": ["Campo de Santana"],
         "type": "city"
     },
     "5007950": {
@@ -21205,6 +21221,7 @@
     },
     "3305901": {
         "name": "Trajano de Moraes",
+				"alias": ["Trajano de Morais"],
         "type": "city"
     },
     "4321600": {

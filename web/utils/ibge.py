@@ -8,7 +8,9 @@ for code, info in ibge_codes.items():
 	if info['type'] == "city":
 		add += "+"+code[:2]
 	ibge_names[unidecode.unidecode(info['name']).lower()+add] = int(code)
-
+	if "alias" in info:
+		for alias in info['alias']:
+			ibge_names[unidecode.unidecode(alias).lower()+add] = int(code)
 def parse_ibge(code):
 	code = str(code)
 	parents  = []
