@@ -75,16 +75,13 @@ def National_Collect():
 		state_loop = 0
 		for state in region['states']:
 			state_loop += 1
-			print(f"{state_loop}/{len(region['states'])}")
 			for city in state['cities']:
 				name = find_ibge(f"{city['txt']}+{state['uid']}")
 				if not name:
-					print(f"FAILED! {city['txt']}, {state['sgl']}")
 					continue
 				output[name] = {"cases": city['vls'][0], 'deaths': city['vls'][6]}
 	with Database() as db:
 		for city in output:
-			print(city)
 			db.insert_place_data(city, json.dumps(output[city]), 'Ministério da Saúde', now)
 	return output
 
@@ -102,7 +99,6 @@ def PR_Collect():
 			output[city] = {"cases": int(case[4]), "deaths": int(case[5]), "recovered": int(case[6]), "active_cases": int(case[4])-int(case[5])-int(case[6])}
 	with Database() as db:
 		for city in output:
-			print(city)
 			db.insert_place_data(city, json.dumps(output[city]), 'Secretaria Estadual de Saúde do Paraná.', now)
 	return output
 
@@ -119,7 +115,7 @@ def RS_Collect():
 		case = sanitize(case.decode('utf-8'), ";", False)
 		if len(case) > 1:
 			city = find_ibge(case[1]+"+43")
-			if not city: print(case[1])
+			if not city: continue
 			state = case_type(case[11])
 
 			# create the place if it is not in the output
@@ -184,7 +180,6 @@ def SC_Collect():
 	req = urllib.request.urlretrieve("http://ftp2.ciasc.gov.br/boavista_covid_dados_abertos.csv")
 	reader = read_until_line(open(req[0], encoding="utf-8"))
 	now = datetime.now()
-	print("reading from file")
 	next(reader)
 
 
