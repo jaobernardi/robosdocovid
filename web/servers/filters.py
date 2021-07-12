@@ -2,6 +2,7 @@ import events
 from structures import Response, Config
 from tasks import thread_function
 import time
+from urllib.parse import unquote
 import socket
 
 config = Config()
@@ -11,7 +12,7 @@ config = Config()
 def analizer_http(event):
 	# Analyze the request and add more info to the event object.
 	request = event.request
-	path = [i.lower() for i in request.path.split("/")[1:] if i]
+	path = [unquote(i) for i in request.path.split("/")[1:] if i]
 	event.add_property(path=path)
 	event.add_property(default_headers={"Server": "robosdocovid/1.0", "X-Server": 'robosdocovid/1.0', 'X-Backend': socket.gethostname(), "Access-Control-Allow-Origin": "*"})
 
