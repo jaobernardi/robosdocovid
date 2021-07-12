@@ -74,7 +74,7 @@ class Database:
 		cursor = self.conn.cursor()
 		cursor.execute(
 			"INSERT INTO `data`(`ibge`, `data`, `source`, `insert_date`) VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE `data`=%s, `source`=%s, `insert_date`=%s",
-			(ibge, data, source, timestamp, data, source, insert_date)
+			(ibge, data, source, timestamp, data, source, timestamp)
 		)
 		return [row for row in cursor]
 
