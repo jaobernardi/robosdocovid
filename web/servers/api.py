@@ -198,7 +198,7 @@ def api_http(event):
 								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
 					except Exception as e:
-						print(e)
+						print("UÉ": e)
 			case _:
 				output = {"status": 404, "message": "Not Found", "error": True}
 		jsonfied = json.dumps(output).encode()
