@@ -173,32 +173,30 @@ def api_http(event):
 				if request.method != "GET":
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
 					output = {"status": 405, "message": "Method Not Allowed", "error": True}
-					try:
-						match event.request.query_string:
-							case {'token': token}:
-								with Database() as db:
-									output = {"status": 403, "message": "Unauthorized", "error": True}
-									user = db.get_user_by_token(token)
-									if user:
-										query = db.get_app_user(phone=phone)
-										query_parsed = []
 
-										for entry in query:
-											query_parsed.append({
-												"uuid": entry[0],
-												"roles": json.loads(entry[1]),
-												"permissions": json.loads(entry[2]),
-												"tags": json.loads(entry[3]),
-												"places": json.loads(entry[4]),
-												"phone": entry[5],
-											})
+				match event.request.query_string:
+					case {'token': token}:
+						with Database() as db:
+							output = {"status": 403, "message": "Unauthorized", "error": True}
+							user = db.get_user_by_token(token)
+							if user:
+								query = db.get_app_user(phone=phone)
+								query_parsed = []
 
-										output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query_parsed}
-							case _:
-								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+								for entry in query:
+									query_parsed.append({
+										"uuid": entry[0],
+										"roles": json.loads(entry[1]),
+										"permissions": json.loads(entry[2]),
+										"tags": json.loads(entry[3]),
+										"places": json.loads(entry[4]),
+										"phone": entry[5],
+									})
 
-					except Exception as e:
-						print("UÉ? ", e)
+								output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query_parsed}
+					case _:
+						output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+
 			case _:
 				output = {"status": 404, "message": "Not Found", "error": True}
 		jsonfied = json.dumps(output).encode()
