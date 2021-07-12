@@ -168,8 +168,6 @@ def api_http(event):
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
 
-			case _:
-				output = {"status": 404, "message": "Not Found", "error": True}
 
 			case ["users", "phone", phone]:
 				if request.method != "GET":
@@ -197,6 +195,8 @@ def api_http(event):
 									output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query_parsed}
 						case _:
 							output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+			case _:
+				output = {"status": 404, "message": "Not Found", "error": True}
 		jsonfied = json.dumps(output).encode()
 		return Response.make(
 			output["status"],
