@@ -4,6 +4,7 @@ from structures import Database
 from datetime import *
 import json
 import urllib.request
+import os
 
 def sanitize(string, split, autotype):
 	unqouted = [i.removeprefix('"').removesuffix('"') for i in string.split(split)]
