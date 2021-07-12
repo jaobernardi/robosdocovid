@@ -23,6 +23,41 @@ class Database:
 	def __exit__(self, *args):
 		self.commit()
 
+	def get_app_user(self, phone=None, uuid=None):
+		cursor = self.conn.cursor()
+		if phone:
+			cursor.execute("SELECT * FROM `users` WHERE `phone`=%s",
+				(phone,)
+			)
+		elif uuid:
+			cursor.execute("SELECT * FROM `users` WHERE `uuid`=%s",
+				(uuid,)
+			)
+		else:
+			raise TypeError("Missing uuid or phone keywords.")
+		return [row for row in cursor]
+
+	def edit_app_user(self, permissions, tags, roles, places, phone=None, uuid=None):
+		cursor = self.conn.cursor()
+		if phone:
+			cursor.execute("UPDATE `users` SET `permissions`=%s, `tags`=%s, `roles`=%s, `places`=%s WHERE `phone`=%s",
+				(permissions, tags, roles, places, phone)
+			)
+		elif uuid:
+			cursor.execute("UPDATE `users` SET `permissions`=%s, `tags`=%s, `roles`=%s, `places`=%s WHERE `uuid`=%s",
+				(permissions, tags, roles, places, uuid)
+			)
+		else:
+			raise TypeError("Missing uuid or phone keywords.")
+		return [row for row in cursor]
+
+	def insert_app_user(self, permissions, tags, roles, places, phone, uuid):
+		cursor = self.conn.cursor()
+		cursor.execute("INSERT INTO `users`(`uuid`, `phone`, `tags`, `permissions`, `places`, `roles`) VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE `permissions`=%s, `tags`=%s, `roles`=%s, `places`=%s, `phone`=%s, `uuid`=%s",
+			(uuid, phone, tags, permissions, places, roles, permissions, tags, roles, places, phone, uuid)
+		)
+		return [row for row in cursor]
+
 	def get_place_data(self, ibge, timestamp=None):
 		cursor = self.conn.cursor()
 		if not timestamp:
@@ -38,18 +73,13 @@ class Database:
 	def insert_place_data(self, ibge, data, source, timestamp):
 		cursor = self.conn.cursor()
 		cursor.execute(
-			"INSERT INTO `data`(`ibge`, `data`, `source`, `insert_date`) VALUES (%s, %s, %s, %s)",
-			(ibge, data, source, timestamp)
+			"INSERT INTO `data`(`ibge`, `data`, `source`, `insert_date`) VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE `data`=%s, `source`=%s, `insert_date`=%s",
+			(ibge, data, source, timestamp, data, source, insert_date)
 		)
 		return [row for row in cursor]
 
 	def edit_place_data(self, ibge, data, source, timestamp):
-		cursor = self.conn.cursor()
-		cursor.execute(
-			"UPDATE `data` SET `data`=%s `source`=%s WHERE `ibge`=%s AND `insert_date`=%s",
-			(data, source, ibge, timestamp)
-		)
-		return [row for row in cursor]
+		return self.insert_place_data(ibge, data, source, timestamp)
 
 	def get_user_by_token(self, token):
 		cursor = self.conn.cursor()
