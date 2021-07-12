@@ -198,6 +198,7 @@ def SC_Collect():
 			output[city]["recovered"] += 1
 		else:
 			output[city]["active_cases"] += 1
+	os.remove(req[0])
 	with Database() as db:
 		for city in output:
 			db.insert_place_data(city, json.dumps(output[city]), 'Secretaria Estadual de Saúde de Santa Catarina.', now)
