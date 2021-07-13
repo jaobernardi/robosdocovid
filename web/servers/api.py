@@ -168,6 +168,29 @@ def api_http(event):
 								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 				else:
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+			case ["users", "new"]:
+				if request.method != "POST":
+					event.default_headers = event.default_headers | {'Allow': 'POST'}
+					output = {"status": 405, "message": "Method Not Allowed", "error": True}
+				elif 'Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json':
+					try:
+						data = json.loads(request.data.decode("utf-8"))
+					except:
+						output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+					else:
+						match data:
+							case {'token': token, "phone": phone, "uuid": uuid}:
+								with Database() as db:
+									output = {"status": 403, "message": "Unauthorized", "error": True}
+									user = db.get_user_by_token(token)
+									if user:
+										db.insert_app_user([], [], [], [], phone, uuid)
+
+										output = {"status": 200, "message": "OK", "error": False}
+							case _:
+								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+				else:
+					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
 			case ["users", method, identification, "edit"]:
 				if request.method != "POST":
