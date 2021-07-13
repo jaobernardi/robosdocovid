@@ -41,11 +41,11 @@ class Database:
 		cursor = self.conn.cursor()
 		if phone:
 			cursor.execute("UPDATE `users` SET `permissions`=%s, `tags`=%s, `roles`=%s, `places`=%s WHERE `phone`=%s",
-				(permissions, tags, roles, places, phone)
+				(str(permissions), str(tags), str(roles), str(places), phone)
 			)
 		elif uuid:
 			cursor.execute("UPDATE `users` SET `permissions`=%s, `tags`=%s, `roles`=%s, `places`=%s WHERE `uuid`=%s",
-				(permissions, tags, roles, places, uuid)
+				(str(permissions), str(tags), str(roles), str(places), uuid)
 			)
 		else:
 			raise TypeError("Missing uuid or phone keywords.")
@@ -54,7 +54,7 @@ class Database:
 	def insert_app_user(self, permissions, tags, roles, places, phone, uuid):
 		cursor = self.conn.cursor()
 		cursor.execute("INSERT INTO `users`(`uuid`, `phone`, `tags`, `permissions`, `places`, `roles`) VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE `permissions`=%s, `tags`=%s, `roles`=%s, `places`=%s, `phone`=%s, `uuid`=%s",
-			(uuid, phone, tags, permissions, places, roles, permissions, tags, roles, places, phone, uuid)
+			(uuid, phone, str(tags), str(permissions), str(places), str(roles), str(permissions), str(tags), str(roles), str(places), phone, uuid)
 		)
 		return [row for row in cursor]
 
