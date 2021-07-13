@@ -169,11 +169,12 @@ def api_http(event):
 				else:
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 			case ["users", "new"]:
+				print(request.data)
 				if request.method != "POST":
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
 					output = {"status": 405, "message": "Method Not Allowed", "error": True}
 				elif 'Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json':
-					print(request.data)
+
 					try:
 						data = json.loads(request.data.decode("utf-8"))
 					except:
