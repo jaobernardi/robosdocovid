@@ -193,7 +193,8 @@ def api_http(event):
 				else:
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
-			case ["users", method, identification, "edit"]:
+			case ["users", "uuid" | "phone", identification, "edit"]:
+				method = event.path[1]
 				if request.method != "POST":
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
 					output = {"status": 405, "message": "Method Not Allowed", "error": True}
