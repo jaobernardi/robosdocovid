@@ -186,7 +186,7 @@ def api_http(event):
 									user = db.get_user_by_token(token)
 									if user:
 										if method == "uuid":
-											db.edit_app_user(uuid=identification, **data
+											db.edit_app_user(uuid=identification, **data)
 										elif method == "phone":
 											db.edit_app_user(phone=identification, **data)
 
