@@ -210,12 +210,14 @@ def api_http(event):
 								with Database() as db:
 									output = {"status": 403, "message": "Unauthorized", "error": True}
 									user = db.get_user_by_token(token)
-									data = {k: json.dumps(v) for k, v in data}
+									clean_data = {}
+									for k, v in data:
+										clean_data[k] = json.dumps(v)
 									if user:
 										if method == "uuid":
-											db.edit_app_user(uuid=identification, **data)
+											db.edit_app_user(uuid=identification, **clean_data)
 										elif method == "phone":
-											db.edit_app_user(phone=identification, **data)
+											db.edit_app_user(phone=identification, **clean_data)
 
 										output = {"status": 200, "message": "OK", "error": False}
 							case _:
