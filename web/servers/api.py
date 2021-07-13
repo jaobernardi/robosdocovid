@@ -4,7 +4,7 @@ from structures import Response, Config, Database
 import json
 import pyotp
 from datetime import datetime
-from utils import parse_ibge, generate_string, union_dicts_with_regex
+from utils import parse_ibge, generate_string, union_dicts_with_regex, query_name
 
 config = Config()
 ibge = json.load(open("ibge.json"))
@@ -19,6 +19,14 @@ def api_http(event):
 		# Placeholder response
 		match event.path:
 			# Query place path
+			case ["ibge", "find"]:
+				if request.method != "GET":
+					event.default_headers = event.default_headers | {'Allow': 'POST'}
+					output = {"status": 405, "message": "Method Not Allowed", "error": True}
+				match event.request.query_string:
+					case {'query': query}:
+						query = query_name(query)
+						output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query}
 			case ["places", "query"]:
 				# Prevent unwanted http methods
 				if request.method != "GET":

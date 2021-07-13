@@ -1,5 +1,6 @@
 import json
 import unidecode
+from difflib import *
 
 ibge_codes = json.load(open("ibge.json"))
 ibge_names = {}
@@ -11,6 +12,7 @@ for code, info in ibge_codes.items():
 	if "alias" in info:
 		for alias in info['alias']:
 			ibge_names[unidecode.unidecode(alias).lower()+add] = int(code)
+
 def parse_ibge(code):
 	code = str(code)
 	parents  = []
@@ -26,5 +28,22 @@ def parse_ibge(code):
 	return ibge_codes[code] | {"parents": parents}
 
 def find_ibge(name):
+	# This should be used to find a code that you already know part of it.
 	if unidecode.unidecode(name.lower()) in ibge_names:
 		return ibge_names[unidecode.unidecode(name.lower())]
+
+def query_name(name):
+	# This should be used whenever you aren't sure the place even exists. Also, it deals with incorrect writings.
+	output = []
+	for code in ibge_codes:
+		data = ibge_codes[code]
+		ratio = SequenceMatcher(None, unidecode.unidecode(name.lower()), unidecode.unidecode(data['name'].lower())).ratio()
+		if ratio > 0.80:
+			output.append(data|{"match": ratio})
+		elif 'alias' in data:
+			for alias in data['alias']:
+				ratio = SequenceMatcher(None, unidecode.unidecode(name.lower()), unidecode.unidecode(alias.lower())).ratio()
+				if ratio > 0.80:
+					output.append(data|{"match": ratio})
+					break
+	return output
