@@ -21,53 +21,44 @@ def api_http(event):
 			# Query place path
 			case ["places", "query"]:
 				# Prevent unwanted http methods
-				if request.method != "POST":
+				if request.method != "GET":
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
 					output = {"status": 405, "message": "Method Not Allowed", "error": True}
+				match event.request.query_string:
+					case {'code': code}:
+						with Database() as db:
+							ibge_data = parse_ibge(code)
+							code = int(code)
 
-				elif 'Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json':
-					try:
-						data = json.loads(request.data.decode("utf-8"))
-					except:
+							query = db.get_place_data(f"{code}%" if code != 0 else "%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
+							datas = []
+							sources = []
+							timestamps = []
+							for entry in query:
+								datas.append(json.loads(entry[1]))
+								if entry[2] not in sources:
+									sources.append(entry[2])
+								if entry[3].timestamp() not in timestamps:
+									timestamps.append(entry[3].timestamp())
+							if ibge_data["type"] != "city":
+								datas = union_dicts_with_regex(config.fields["summable"]['default'], datas)
+							else:
+								datas = datas[0]
+
+							output = {"status": 200,
+								"message": "OK",
+								"error": False,
+								"results": len(query),
+								"query": {
+									"data": datas,
+									"sources": sources,
+									"ibge_code": code,
+									"timestamps": timestamps,
+									"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{code}?formato=application/vnd.geo+json",
+									} | ibge_data
+								}
+					case _:
 						output = {"status": 422, "message": "Unprocessable Entity", "error": True}
-					else:
-						match data:
-							case {'code': code, 'timestamp': timestamp}:
-								with Database() as db:
-									ibge_data = parse_ibge(code)
-									code = int(code)
-
-									query = db.get_place_data(f"{code}%" if code != 0 else "%", datetime.utcfromtimestamp(timestamp) if timestamp else None)
-									datas = []
-									sources = []
-									timestamps = []
-									for entry in query:
-										datas.append(json.loads(entry[1]))
-										if entry[2] not in sources:
-											sources.append(entry[2])
-										if entry[3].timestamp() not in timestamps:
-											timestamps.append(entry[3].timestamp())
-									if ibge_data["type"] != "city":
-										datas = union_dicts_with_regex(config.fields["summable"]['default'], datas)
-									else:
-										datas = datas[0]
-
-									output = {"status": 200,
-										"message": "OK",
-										"error": False,
-										"results": len(query),
-										"query": {
-											"data": datas,
-											"sources": sources,
-											"ibge_code": code,
-											"timestamps": timestamps,
-											"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{code}?formato=application/vnd.geo+json",
-											} | ibge_data
-										}
-							case _:
-								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
-				else:
-					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
 			# Insert data into the database
 			case ["places", "insert"]:
