@@ -210,6 +210,7 @@ def api_http(event):
 								with Database() as db:
 									output = {"status": 403, "message": "Unauthorized", "error": True}
 									user = db.get_user_by_token(token)
+									data = {k: json.dumps(v) for k, v in data}
 									if user:
 										if method == "uuid":
 											db.edit_app_user(uuid=identification, **data)
