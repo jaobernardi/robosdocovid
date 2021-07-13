@@ -161,14 +161,14 @@ def RS_Collect():
 				output[city]["vaccinated_70_1st"] = region["vac_70_74_d1"]
 				output[city]["vaccinated_65_1st"] = region["vac_65_69_d1"]
 				output[city]["vaccinated_60_1st"] = region["vac_60_64_d1"]
-				output[city]["vaccinated_codeath_1st"] = region["vac_comorb_d1"]
+				output[city]["vaccinated_comorbidity_1st"] = region["vac_comorb_d1"]
 				output[city]["vaccinated_health_2nd"] = region["vac_prof_saude_d2"]
 				output[city]["vaccinated_80_2nd"] = region["vac_80mais_d2"]
 				output[city]["vaccinated_75_2nd"] = region["vac_75_79_d2"]
 				output[city]["vaccinated_70_2nd"] = region["vac_70_74_d2"]
 				output[city]["vaccinated_65_2nd"] = region["vac_65_69_d2"]
 				output[city]["vaccinated_60_2nd"] = region["vac_60_64_d2"]
-				output[city]["vaccinated_codeath_2nd"] = region["vac_comorb_d2"]
+				output[city]["vaccinated_comorbidity_2nd"] = region["vac_comorb_d2"]
 
 	with Database() as db:
 		for city in output:
