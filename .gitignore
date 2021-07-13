@@ -1,4 +1,6 @@
 web/config.json
+whatsapp/config.json
+whatsapp/browser/session/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
