@@ -18,7 +18,9 @@ def api_http(event):
 	if "Host" in request.headers and request.headers["Host"] == config.scopes["api"]:
 		# Placeholder response
 		match event.path:
+			# Query place path
 			case ["places", "query"]:
+				# Prevent unwanted http methods
 				if request.method != "POST":
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
 					output = {"status": 405, "message": "Method Not Allowed", "error": True}
@@ -167,9 +169,35 @@ def api_http(event):
 				else:
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
+			case ["users", method, identification, "edit"]:
+				if request.method != "POST":
+					event.default_headers = event.default_headers | {'Allow': 'POST'}
+					output = {"status": 405, "message": "Method Not Allowed", "error": True}
+				elif 'Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json':
+					try:
+						data = json.loads(request.data.decode("utf-8"))
+					except:
+						output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+					else:
+						match data:
+							case {'token': token, **data}:
+								with Database() as db:
+									output = {"status": 403, "message": "Unauthorized", "error": True}
+									user = db.get_user_by_token(token)
+									if user:
+										if method == "uuid":
+											db.edit_app_user(uuid=identification, **data
+										elif method == "phone":
+											db.edit_app_user(phone=identification, **data)
+
+										output = {"status": 200, "message": "OK", "error": False}
+							case _:
+								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
+				else:
+					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
 
-			case ["users", "phone", phone]:
+			case ["users", method, identification]:
 				if request.method != "GET":
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
 					output = {"status": 405, "message": "Method Not Allowed", "error": True}
@@ -180,7 +208,10 @@ def api_http(event):
 							output = {"status": 403, "message": "Unauthorized", "error": True}
 							user = db.get_user_by_token(token)
 							if user:
-								query = db.get_app_user(phone=phone)
+								if method == "uuid":
+									query = db.get_app_user(uuid=identification)
+								if method == "phone":
+									query = db.get_app_user(phone=identification)
 								query_parsed = []
 
 								for entry in query:
