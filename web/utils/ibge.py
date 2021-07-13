@@ -32,18 +32,19 @@ def find_ibge(name):
 	if unidecode.unidecode(name.lower()) in ibge_names:
 		return ibge_names[unidecode.unidecode(name.lower())]
 
-def query_name(name):
+def query_name(name, margin=0.8):
+	margin = float(margin)
 	# This should be used whenever you aren't sure the place even exists. Also, it deals with incorrect writings.
 	output = {}
 	for code in ibge_codes:
 		data = ibge_codes[code]
 		ratio = SequenceMatcher(None, unidecode.unidecode(name.lower()), unidecode.unidecode(data['name'].lower())).ratio()
-		if ratio > 0.80:
+		if ratio > margin:
 			output[code] = data|{"match": ratio}
 		elif 'alias' in data:
 			for alias in data['alias']:
 				ratio = SequenceMatcher(None, unidecode.unidecode(name.lower()), unidecode.unidecode(alias.lower())).ratio()
-				if ratio > 0.80:
+				if ratio > margin:
 					output[code] = data|{"match": ratio}
 					break
 	return output
