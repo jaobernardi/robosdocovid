@@ -5,111 +5,138 @@
 		},
     "35": {
         "name": "S\u00e3o Paulo",
-        "type": "state"
+        "type": "state",
+				"alias": ["SP"]
     },
     "41": {
         "name": "Paran\u00e1",
-        "type": "state"
+        "type": "state",
+				"alias": ["PR"]
     },
     "42": {
         "name": "Santa Catarina",
-        "type": "state"
+        "type": "state",
+				"alias": ["SC"]
     },
     "43": {
         "name": "Rio Grande do Sul",
-        "type": "state"
+        "type": "state",
+				"alias": ["RS"]
     },
     "50": {
         "name": "Mato Grosso do Sul",
-        "type": "state"
+        "type": "state",
+				"alias": ["MS"]
     },
     "11": {
         "name": "Rond\u00f4nia",
-        "type": "state"
+        "type": "state",
+				"alias": ["RO"]
     },
     "12": {
         "name": "Acre",
-        "type": "state"
+        "type": "state",
+				"alias": ["AC"]
     },
     "13": {
         "name": "Amazonas",
-        "type": "state"
+        "type": "state",
+				"alias": ["AM"]
     },
     "14": {
         "name": "Roraima",
-        "type": "state"
+        "type": "state",
+				"alias": ["RR"]
     },
     "15": {
         "name": "Par\u00e1",
-        "type": "state"
+        "type": "state",
+				"alias": ["PA"]
     },
     "16": {
         "name": "Amap\u00e1",
-        "type": "state"
+        "type": "state",
+				"alias": ["AP"]
     },
     "17": {
         "name": "Tocantins",
-        "type": "state"
+        "type": "state",
+				"alias": ["TO"]
     },
     "21": {
         "name": "Maranh\u00e3o",
-        "type": "state"
+        "type": "state",
+				"alias": ["MA"]
     },
     "24": {
         "name": "Rio Grande do Norte",
-        "type": "state"
+        "type": "state",
+				"alias": ["RN"]
     },
     "25": {
         "name": "Para\u00edba",
-        "type": "state"
+        "type": "state",
+				"alias": ["PB"]
     },
     "26": {
         "name": "Pernambuco",
-        "type": "state"
+        "type": "state",
+				"alias": ["PE"]
     },
     "27": {
         "name": "Alagoas",
-        "type": "state"
+        "type": "state",
+				"alias": ["AL"]
     },
     "28": {
         "name": "Sergipe",
-        "type": "state"
+        "type": "state",
+				"alias": ["SE"]
     },
     "29": {
         "name": "Bahia",
-        "type": "state"
+        "type": "state",
+				"alias": ["BA"]
     },
     "31": {
         "name": "Minas Gerais",
-        "type": "state"
+        "type": "state",
+				"alias": ["MG"]
     },
     "33": {
         "name": "Rio de Janeiro",
-        "type": "state"
+        "type": "state",
+				"alias": ["RJ"]
     },
     "51": {
         "name": "Mato Grosso",
-        "type": "state"
+        "type": "state",
+				"alias": ["MT"]
     },
     "52": {
         "name": "Goi\u00e1s",
-        "type": "state"
+        "type": "state",
+				"alias": ["GO"]
     },
     "53": {
         "name": "Distrito Federal",
-        "type": "state"
+        "type": "state",
+				"alias": ["DF"]
     },
     "22": {
         "name": "Piau\u00ed",
-        "type": "state"
+        "type": "state",
+				"alias": ["PI"]
     },
     "23": {
         "name": "Cear\u00e1",
-        "type": "state"
+        "type": "state",
+				"alias": ["CE"]
     },
     "32": {
         "name": "Esp\u00edrito Santo",
-        "type": "state"
+        "type": "state",
+				"alias": ["ES"]
     },
     "5200050": {
         "name": "Abadia de Goi\u00e1s",
