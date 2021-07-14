@@ -41,6 +41,8 @@ def query_name(name, margin=0.8):
 		ratio = SequenceMatcher(None, unidecode.unidecode(name.lower()), unidecode.unidecode(data['name'].lower())).ratio()
 		if ratio > margin:
 			output[code] = data|{"match": ratio}
+			if ratio == 1:
+				break
 		elif 'alias' in data:
 			for alias in data['alias']:
 				ratio = SequenceMatcher(None, unidecode.unidecode(name.lower()), unidecode.unidecode(alias.lower())).ratio()
