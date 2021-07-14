@@ -1,6 +1,7 @@
 web/config.json
 whatsapp/config.json
-whatsapp/browser/session/*
+whatsapp/browser/session_data/*
+whatsapp/browser/local_actions/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
