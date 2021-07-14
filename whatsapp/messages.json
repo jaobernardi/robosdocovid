@@ -1,0 +1,12 @@
+{
+	"flow": {
+		"multiple_choices_places": "💁‍♀️ - Eu encontrei mais de um lugar com esse nome, estas são as opções:\n{menu}\n👉 Selecione um local e envie o seu número correspondente."
+	},
+	"errors": {
+		"bad_choice": "🙅‍♀️ - _\"{message}\"_ não é uma opção válida, verifique novamente a lista!"
+	},
+	"sucess": {
+		"add_place": f"✍️ - Anotado, adicionei {place} na sua lista!"
+	}
+
+}

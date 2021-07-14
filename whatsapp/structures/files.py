@@ -36,3 +36,12 @@ class Config(RelativeJsonFile):
 	def __init__(self):
 		self._data = {}
 		super().__init__("config.json")
+
+class Messages(RelativeJsonFile):
+	"""
+	Represents the messages file.
+	"""
+	_data = {}
+	def __init__(self):
+		self._data = {}
+		super().__init__("messages.json")
