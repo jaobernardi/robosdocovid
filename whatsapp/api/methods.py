@@ -36,7 +36,7 @@ def resolve_name(name):
 		logging.critical(f"Failed to query data for {name}")
 		return []
 
-def get_ibge_data(code):
+def ibge_lookup(code):
 	req = requests.get(f"https://api.robocovid.app/ibge/find?code={code}")
 	if req.status_code == 200:
 		data = req.json()
