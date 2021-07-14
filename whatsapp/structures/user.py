@@ -1,3 +1,6 @@
+global temporary_context
+temporary_context = {}
+
 class User:
 	def __init__(self, phone, uuid, places, tags, permissions, roles, new=False):
 		self.phone = phone
@@ -7,6 +10,13 @@ class User:
 		self.permissions = permissions
 		self.roles = roles
 		self.new = new
+
+	@property
+	def temporary_context(self):
+		if self.uuid not in temporary_context:
+			temporary_context[self.uuid] = Context()
+		return temporary_context[self.uuid]
+
 
 	@property
 	def _store(self):
@@ -20,3 +30,28 @@ class User:
 	def flush_info(self):
 		import api
 		api.update_user(self)
+
+
+class Context(object):
+
+    def __init__(self):
+        x = object.__getattribute__(self, "__dict__")
+        x['store'] = {}
+
+    def __setattr__(self, name, value):
+        print("set", name, value)
+        store = object.__getattribute__(self, "store")
+        if name not in store:
+            store[name] = None
+        store[name] = value
+        object.__setattr__(self, "store", store)
+
+    def __getattribute__(self, name):
+        print("get", name)
+        if name.startswith("_"):
+            return object.__getattribute__(self, name)
+
+        store = object.__getattribute__(self, "store")
+        if name in store:
+            return store[name]
+        return None
