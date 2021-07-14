@@ -183,7 +183,7 @@ def api_http(event):
 							output = {"status": 403, "message": "Unauthorized", "error": True}
 							user = db.get_user_by_token(token)
 							if user:
-								query = db.get_app_users(uuid=identification)
+								query = db.get_app_users()
 								query_parsed = []
 
 								for entry in query:
