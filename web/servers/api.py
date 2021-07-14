@@ -24,6 +24,10 @@ def api_http(event):
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
 					output = {"status": 405, "message": "Method Not Allowed", "error": True}
 				match event.request.query_string:
+					case {'code': query}:
+						query = parse_ibge(query)
+						output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query}
+	
 					case {'query': query, **data}:
 						query = query_name(query, **data)
 						output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query}
