@@ -27,7 +27,7 @@ def api_http(event):
 					case {'code': query}:
 						query = parse_ibge(query)
 						output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query}
-	
+
 					case {'query': query, **data}:
 						query = query_name(query, **data)
 						output = {"status": 200, "message": "OK", "error": False, "results": len(query), "query": query}
@@ -230,7 +230,7 @@ def api_http(event):
 				else:
 					output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 
-			case ["users", "uuid" | "phone", identification, "edit"]:
+			case ["users", "uuid" | "phone", identification, action]:
 				method = event.path[1]
 				if request.method != "POST":
 					event.default_headers = event.default_headers | {'Allow': 'POST'}
@@ -250,12 +250,20 @@ def api_http(event):
 									for k, v in data.items():
 										clean_data[k] = json.dumps(v)
 									if user:
-										if method == "uuid":
-											db.edit_app_user(uuid=identification, **clean_data)
-										elif method == "phone":
-											db.edit_app_user(phone=identification, **clean_data)
-
 										output = {"status": 200, "message": "OK", "error": False}
+										if action == "edit":
+											if method == "uuid":
+												db.edit_app_user(uuid=identification, **clean_data)
+											elif method == "phone":
+												db.edit_app_user(phone=identification, **clean_data)
+										elif action == "delete":
+											if method == "uuid":
+												db.delete_app_user(uuid=identification)
+											elif method == "phone":
+												db.delete_app_user(phone=identification)
+										else:
+											output = {"status": 404, "message": "Not Found", "error": False}
+
 							case _:
 								output = {"status": 422, "message": "Unprocessable Entity", "error": True}
 				else:
