@@ -23,6 +23,12 @@ class Database:
 	def __exit__(self, *args):
 		self.commit()
 
+	def get_app_users(self):
+		cursor = self.conn.cursor()
+		cursor.execute("SELECT * FROM `users` WHERE 1=1",
+			()
+		)
+		return [row for row in cursor]
 	def get_app_user(self, phone=None, uuid=None):
 		cursor = self.conn.cursor()
 		if phone:
