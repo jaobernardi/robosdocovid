@@ -29,6 +29,21 @@ class Database:
 			()
 		)
 		return [row for row in cursor]
+
+	def delete_app_user(self, phone=None, uuid=None):
+		cursor = self.conn.cursor()
+		if phone:
+			cursor.execute("DELETE FROM `users` WHERE `phone`=%s",
+				(phone,)
+			)
+		elif uuid:
+			cursor.execute("DELETE FROM `users` WHERE `uuid`=%s",
+				(uuid,)
+			)
+		else:
+			raise TypeError("Missing uuid or phone keywords.")
+		return [row for row in cursor]
+
 	def get_app_user(self, phone=None, uuid=None):
 		cursor = self.conn.cursor()
 		if phone:
