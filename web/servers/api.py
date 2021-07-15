@@ -58,19 +58,41 @@ def api_http(event):
 									regex = config.fields["summable"][str(code)]
 								datas = union_dicts_with_regex(regex, datas)
 							else:
-								datas = datas[0]
+								codes = [code]
+							for code in codes:
+								ibge_data = parse_ibge(code)
+								code = int(code)
 
-							output = {"status": 200,
-								"message": "OK",
-								"error": False,
-								"results": len(query),
-								"query": {
+								query = db.get_place_data(f"{code}%" if code != 0 else "%", None)
+								datas = []
+								sources = []
+								timestamps = []
+								for entry in query:
+									datas.append(json.loads(entry[1]))
+									if entry[2] not in sources:
+										sources.append(entry[2])
+									if entry[3].timestamp() not in timestamps:
+										timestamps.append(entry[3].timestamp())
+								if ibge_data["type"] != "city":
+									if str(code) not in config.fields["summable"]:
+										regex = config.fields["summable"]['default']
+									else:
+										regex = config.fields["summable"][str(code)]
+									datas = union_dicts_with_regex(regex, datas)
+								else:
+									datas = datas[0]
+								query_data[code] = {
 									"data": datas,
 									"sources": sources,
 									"ibge_code": code,
 									"timestamps": timestamps,
 									"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{code}?formato=application/vnd.geo+json",
 									} | ibge_data
+							output = {"status": 200,
+								"message": "OK",
+								"error": False,
+								"results": len(query_data),
+								"query": query_data
 								}
 					case _:
 						output = {"status": 422, "message": "Unprocessable Entity", "error": True}
