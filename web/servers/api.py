@@ -39,7 +39,7 @@ def api_http(event):
 				match event.request.query_string:
 					case {'code': code}:
 						with Database() as db:
-							query_data = []
+							query_data = {}
 							if "," in code:
 								codes = code.split(",")
 							else:
@@ -66,13 +66,13 @@ def api_http(event):
 									datas = union_dicts_with_regex(regex, datas)
 								else:
 									datas = datas[0]
-								query_data.append({
+								query_data[code] = {
 									"data": datas,
 									"sources": sources,
 									"ibge_code": code,
 									"timestamps": timestamps,
 									"geojson": f"https://servicodados.ibge.gov.br/api/v2/malhas/{code}?formato=application/vnd.geo+json",
-									} | ibge_data)
+									} | ibge_data
 							output = {"status": 200,
 								"message": "OK",
 								"error": False,
