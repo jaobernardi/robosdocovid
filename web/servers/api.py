@@ -41,7 +41,6 @@ def api_http(event):
 						with Database() as db:
 							ibge_data = parse_ibge(code)
 							code = int(code)
-
 							query = db.get_place_data(f"{code}%" if code != 0 else "%", None)
 							datas = []
 							sources = []
