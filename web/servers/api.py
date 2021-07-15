@@ -39,7 +39,7 @@ def api_http(event):
 				match event.request.query_string:
 					case {'code': code}:
 						with Database() as db:
-							if "," in codes:
+							if "," in code:
 								codes = code.split(",")
 							else:
 								codes = [code]
