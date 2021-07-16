@@ -11,6 +11,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from utils import generate_uuid
 from selenium.webdriver.common.action_chains import ActionChains
+from .methods import send_message
 
 
 def run_browser():
@@ -35,7 +36,7 @@ def run_browser():
 	while True:
 		last_writeable = False
 		sleep(1)
-		if True: #try:
+		try:
 			# check for new activites.
 			if action := activities.last:
 				# get and run the last activity.
@@ -102,14 +103,15 @@ def run_browser():
 					event.response = [event.response]
 				# find the msg box.
 				msg_box = driver.find_elements_by_class_name(config.whatsapp["class_message_box"])[1]
+				# mark the reply message
+				js = "var messages = document.getElementsByClassName(\"message-in\");messages[messages.length-1].dispatchEvent(new MouseEvent('dblclick', {'view': window,'bubbles': true,'cancelable': true}));"
+				driver.execute_script(js)
 				# supporting multiple response messages.
 				for response in event.response:
 
 					# setup the JS code to be injected.
-					# mark the reply message
-					js = "var messages = document.getElementsByClassName(\"message-in\");messages[messages.length-1].dispatchEvent(new MouseEvent('dblclick', {'view': window,'bubbles': true,'cancelable': true}));"
 					# send message
-					js += f'event = document.createEvent("UIEvents");doc = document.getElementsByClassName("{config.whatsapp["class_message_box"]} copyable-text selectable-text")[1];doc.innerHTML = arguments[0];event.initUIEvent("input", true, true, window, 1);doc.dispatchEvent(event);'
+					js = f'event = document.createEvent("UIEvents");doc = document.getElementsByClassName("{config.whatsapp["class_message_box"]} copyable-text selectable-text")[1];doc.innerHTML = arguments[0];event.initUIEvent("input", true, true, window, 1);doc.dispatchEvent(event);'
 
 					# execute the code and send an ENTER keystroke to the message box.
 					driver.execute_script(js, response)
@@ -127,11 +129,9 @@ def run_browser():
 				driver.execute_script(js, "500")
 				msg_box.send_keys(Keys.ENTER)
 
-		# except Exception as e:
-		#     # TO-DO: whenever there is an error, report it.
-
-		#     print(e)
-
-		#     # whenever there is an index error, reset the pointer.
-		#     if isinstance(e, IndexError):
-		#         last = ["", None]
+		except Exception as e:
+		    # TO-DO: whenever there is an error, report it.
+		    print(e)
+		    # whenever there is an index error, reset the pointer.
+		    if isinstance(e, IndexError):
+		        last = ["", None]

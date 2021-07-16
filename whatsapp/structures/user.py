@@ -39,7 +39,6 @@ class Context(object):
         x['store'] = {}
 
     def __setattr__(self, name, value):
-        print("set", name, value)
         store = object.__getattribute__(self, "store")
         if name not in store:
             store[name] = None
@@ -47,7 +46,6 @@ class Context(object):
         object.__setattr__(self, "store", store)
 
     def __getattribute__(self, name):
-        print("get", name)
         if name.startswith("_"):
             return object.__getattribute__(self, name)
 

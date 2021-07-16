@@ -5,8 +5,22 @@ import functools
 
 config = Config()
 
+def get_places():
+	places = []
+	for user in get_users():
+		for place in user.places:
+			if place in places and place:
+				continue
+			places.append(place)
+	return places
+
+def get_users_by_filter(place=None):
+	for user in get_users():
+		if place not in user.places:
+			continue
+		yield user
+
 def get_user(phone=None, uuid=None):
-	print(phone, uuid)
 	if not phone and not uuid:
 		raise TypeError("Missing phone or uuid keywords.")
 
@@ -36,6 +50,7 @@ def resolve_name(name):
 		logging.critical(f"Failed to query data for {name}")
 		return []
 
+@functools.cache
 def ibge_lookup(code):
 	req = requests.get(f"https://api.robocovid.app/ibge/find?code={code}")
 	if req.status_code == 200:
@@ -65,3 +80,6 @@ def get_place_data(code):
 
 def update_user(user: User):
 	req = requests.post(f"https://api.robocovid.app/users/uuid/{user.uuid}/edit", json={**user._store, "token": config.api['token']})
+
+def delete_user(user: User):
+	req = requests.post(f"https://api.robocovid.app/users/uuid/{user.uuid}/delete", json={**user._store, "token": config.api['token']})

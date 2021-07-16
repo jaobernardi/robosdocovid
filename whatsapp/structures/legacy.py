@@ -5,7 +5,6 @@ from utils import generate_token
 
 class IO_Wrapper:
 	def __init__(self, data):
-		print(data)
 		self.token = generate_token()
 		self.data = data
 
@@ -35,7 +34,6 @@ class Persistance_IO:
 	@staticmethod
 	def write(path, intake):
 		with open(path, "wb") as file:
-			print(intake)
 			output = dill.dump(intake, file)
 
 
@@ -60,5 +58,4 @@ class IO_Var(Persistance_IO):
 
 	def add(self, data):
 		wrapped = IO_Wrapper(data)
-		print(wrapped)
 		self.write(self.path+wrapped.token+".iov", wrapped)

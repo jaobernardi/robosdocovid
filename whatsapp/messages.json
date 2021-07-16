@@ -1,12 +1,32 @@
 {
 	"flow": {
+		"welcome": "Olá! 👋\nSeja bem vindo(a)! Por aqui você será informado(a) sobre a situação da Covid-19 em qualquer região que desejar.\nPara começarmos, envie o nome da *cidade* *ou* *Estado* que deseja registrar.",
+		"report_build": "💭 - Processando todos os dados para o seu boletim! _(essa ação pode levar alguns minutos para ser completada!)_",
 		"multiple_choices_places": "💁‍♀️ - Eu encontrei mais de um lugar com esse nome, estas são as opções:\n{menu}\n👉 Selecione um local e envie o seu número correspondente."
 	},
 	"errors": {
+		"place_not_found": "🙅‍♀️ - Não encontrei nenhum local parecido com _{place}_",
+		"not_found": "🙅‍♀️ - Não encontrei nenhum comando parecido com _{command}_",
+		"wrong_usage": "🙅‍♀️ - Uso incorreto do comando *{command}.*\n ```Forma correta:``` {command} {usage}\n ```Exemplo de uso:``` {command} {example_arguments}",
 		"bad_choice": "🙅‍♀️ - _\"{message}\"_ não é uma opção válida, verifique novamente a lista!"
 	},
-	"sucess": {
-		"add_place": f"✍️ - Anotado, adicionei {place} na sua lista!"
-	}
-
+	"success": {
+		"metodologia": "ℹ - Nota metodológica.\n\n✳️ - Para o Estado do *Paraná*\n\n1️⃣ - Os dados são extraídos do Dados Abertos do estado do Paraná.\n\n✳️ - Para o Estado de *Santa Catarina*\n\n1️⃣ - Os dados são extraídos do Dados Abertos do estado de Santa Catarina.\n\n✳️ - Para o Estado do *Rio Grande do Sul*\n\n1️⃣ - Os dados são extraídos da lista de notificações da SES/RS\n2️⃣ - As notificações são contadas, assim os casos, óbitos, recuperados e casos ativos são atribuidos aos seus respectivos municípios e bairros.\n3️⃣ - Os dados do painel do Distânciamento Controlado e Covid-19 (Dados do sistema de saúde) são coletados e atribuidos aos municípios.\n4️⃣ - É gerado o 'Nível de Estresse' a partir da média entre ocupação dos leitos para covid-19 (uti adultos privados e públicos, respiradores e não-uti). \n\n✳️ - Para as demais regiões\n\n1️⃣ - Os dados são extraídos do Painel de Monitoramento COVID-19, do Ministério da Saúde.",
+		"delete": "👩‍💻 - Certo, sua assinatura foi cancelada e seus dados serão deletados após o período mínimo de 24 horas. Para voltar a receber boletins, envie novamente a cidade ou Estado que gostaria de registrar.",
+		"place_list": "💁‍♀️ - Estes são os lugares em que você está registrado:\n{menu}",
+		"add_place": "✍️ - Anotado, adicionei {place} na sua lista!",
+		"remove_place": "✍️ - Anotado, removi {place} da sua lista!",
+		"welcome_with_place": "Olá! 👋\nSeja bem vindo(a)! Por aqui você será informado(a) sobre a situação da Covid-19 em {place}.\n👉 Para adicionar novos lugares, envie a palavra *adicionar* seguida do nome do local, exemplo: *adicionar* _São Paulo, SP_",
+		"first_register": "Anotado ✍ - Agora você receberá boletins de {place}. Para adicionar mais lugares você terá que colocar a palavra  adicionar  antes dos nomes, para saber mais sobre este projeto envie a palavra  sobre, para saber os comandos envie a palavra comandos."
+	},
+	"foot_notice": [
+		"💉 ```Se você viu alguém furando a fila da vacina, DENUNCIE.``` - Quem tomar a vacina e não estiver em algum dos grupos de risco com prioridade para a imunização e também quem autorizou a aplicação irregular poderão responder por crime.",
+		"🏡 ```Se puder, fique em casa!``` - A diminuição da circulação de pessoas pode reduzir a taxa de contágio, assim evitando um colapso no Sistema de Saúde.",
+		"😷 ```Se tiver que sair de casa, use máscara!```- Se você tiver que sair de casa, em uma situação extrema, utilize máscara (cobrindo o nariz e a boca) para evitar o contágio, lembrando de evitar tocar os olhos e a frente da máscara.",
+		"👩‍⚕️ ```Se você se sentir mal, permaneça em casa``` - Caso você apresente sintomas como tosse seca, cansaço e febre, procure ajuda médica.",
+		"🧼 ```Limpe as mãos!``` - Lembre-se de lavar as mãos por 20 segundos com sabão, lavando bem entre os dedos, as palmas, as costas das mãos e as pontas dos dedos.",
+		"🧽 ```Se for ao mercado, limpe as mercadorias.``` - Ao retornar do mercado, limpe as mercadorias com álcool ou água sanitária diluida em água ( 250 ml de água sanitária para 1 litro de água; Conserve em local escuro, pois o pode perder seu potencial de desinfecção se for exposta a luz; recomenda-se a utilização imediata após a diluição.)",
+		"🔍 ```Verifique antes de compartilhar!``` - Evite compartilhar informações que não apresentam fontes ou contém um teor duvidoso. Em caso de dúvida, não compartilhe.",
+		"🧍‍♂️↔🧍‍♂️ ```Evite aglomerações.``` - Para evitar o aumento das taxas de contágio, a transmissão e infecção pelo vírus, *evite aglomerações*. Seu esforço pode salvar vidas."
+	]
 }
