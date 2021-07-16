@@ -26,7 +26,7 @@ def run_browser():
 	# chrome_options.add_argument("--headless")
 	chrome_options.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
 	# setup the driver.
-	driver = webdriver.Chrome('/home/jaobernardi/Projects/robosdocovid/whatsapp/browser/chromedriver', options=chrome_options)
+	driver = webdriver.Chrome(config.whatsapp['chromedriver_path'], options=chrome_options)
 	driver.get("https://web.whatsapp.com")
 	# wait for the page to fully load-up.
 	WebDriverWait(driver, 200).until(
