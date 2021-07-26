@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 # Send message method
-def send_message(user, messages, is_file=False, create=False, callback=(lambda driver: None), fallback=(lambda driver: None)):
+def send_message(user, messages, is_file=False, create=False, callback=(lambda driver: None), fallback=(lambda driver: None), token_size=10):
 	# Create an instance of the Config IO and retrieve the path for the activites path
 	config = Config()
 	# The structures.IO_Var basically is a method retrieve and add persistent python-objects into files using the lib dill.
@@ -75,12 +75,12 @@ def send_message(user, messages, is_file=False, create=False, callback=(lambda d
 				.find_element_by_tag_name("span") \
 				.text
 			if name == new_name:
-				logging.info(f"Sending message to {name}")
+				logging.info(f"Enviando mensagem para {name}")
 				for message in messages:
 					if is_file:
 						driver.find_element_by_css_selector(
 							'span[data-icon="clip"]').click()
-						attach = driver.find_element_by_css_selector(
+						attach = driver.finIO_Wrapperd_element_by_css_selector(
 							'input[type="file"]')
 						attach.send_keys(message)
 						WebDriverWait(driver, 200).until(EC.presence_of_element_located(
@@ -100,7 +100,7 @@ def send_message(user, messages, is_file=False, create=False, callback=(lambda d
 						# Send the message
 						msg_box.send_keys(Keys.ENTER)
 			else:
-				logging.info(f"Moved pointer to {name} and found {new_name}")
+				logging.critical(f"O ponteiro foi direcionado para {name} porém encontrou {new_name}")
 				# Sleep to prevent any possible errors
 			sleep(0.3)
 
@@ -112,4 +112,4 @@ def send_message(user, messages, is_file=False, create=False, callback=(lambda d
 			callback(driver)
 
 	# Append the function to the activities path
-	activities.add(wrapper)
+	activities.add(wrapper, token_size=token_size)

@@ -22,5 +22,11 @@ Para dar sugestões de novas funcionalidades ou alterações em funções já ex
 
 ## **TO-DO**
 - [x] Terminar o README.md
+- [x] API
+- [ ] Painel online
+- [ ] Dataset para referências (uso interno)
+- [x] Whatsapp bot
+- [ ] Atualizar a wiki
+- [ ] Revisar e limpar o código
 
 > Feito por [@jaobernard](https://twitter.com/jaobernard) com 💖

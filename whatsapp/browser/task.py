@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from utils import generate_uuid
 from selenium.webdriver.common.action_chains import ActionChains
 from .methods import send_message
+import logging
 
 
 def run_browser():
@@ -23,7 +24,7 @@ def run_browser():
 	chrome_options = Options()
 	chrome_options.add_argument("--no-sandbox")
 	chrome_options.add_argument("user-data-dir=" + config.whatsapp["session_path"])
-	# chrome_options.add_argument("--headless")
+	chrome_options.add_argument("--headless")
 	chrome_options.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
 	# setup the driver.
 	driver = webdriver.Chrome(config.whatsapp['chromedriver_path'], options=chrome_options)
@@ -40,7 +41,7 @@ def run_browser():
 			# check for new activites.
 			if action := activities.last:
 				# get and run the last activity.
-				print(action)
+				logging.info(f"Executando ação {action.token}")
 				action.data(driver)
 				activities.remove(action)
 
@@ -49,7 +50,6 @@ def run_browser():
 
 			# check if there is new messages and allow the pointer to update.
 			if len(new) > 0:
-				print("trying to get to message")
 				last_writeable = True
 				x = new[0]
 				x.click()
@@ -94,6 +94,7 @@ def run_browser():
 				api.create_user(name, generate_uuid())
 				user = api.get_user(name)
 				user.new = True
+			logging.info(f"[{name}]: {text}")
 			event = events.call_event("new_message", cancellable=True, user=user, message=text, response="", acknowledge=acknowledge)
 
 			# check if there is an response and if the event isn't cancelled.

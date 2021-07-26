@@ -4,8 +4,8 @@ from utils import generate_token
 
 
 class IO_Wrapper:
-	def __init__(self, data):
-		self.token = generate_token()
+	def __init__(self, data, token_size=10):
+		self.token = generate_token(token_size)
 		self.data = data
 
 
@@ -56,6 +56,6 @@ class IO_Var(Persistance_IO):
 		if token+".iov" in os.listdir(self.path):
 			os.remove(self.path+token+".iov")
 
-	def add(self, data):
-		wrapped = IO_Wrapper(data)
+	def add(self, data, token_size):
+		wrapped = IO_Wrapper(data, token_size)
 		self.write(self.path+wrapped.token+".iov", wrapped)

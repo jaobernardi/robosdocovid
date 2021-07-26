@@ -2,15 +2,42 @@ import api
 import events
 import tasks
 import utils
+import logging
+import threading
 
 from structures import Messages, Config
 from browser import send_message
 
 
 # Special functions:
+@tasks.thread_function
+def worker(zero_user):
+	threading.current_thread().name = "SAB"
+	logging.info(f"Ordem de apuração inicializada. Origem: Local, Agente: {zero_user.phone} ({zero_user.uuid})")
+	utils.notify(f"<b>SAB</b> - Ordem de apuração inicializada.\n <i>Origem</i> - Local\n <i>Agente</i> {zero_user.phone} <i>({zero_user.uuid})</i>")
+	messages = Messages()
+	queue = {}
+	stats = {"places_checked": 0, "messages_queued": 0, "users_affected": 0}
+	for place in api.get_places():
+		data = api.get_place_data(place)
+		stats["places_checked"] += 1
+		for user in api.get_users_by_filter(place):
+			if user.uuid not in queue:
+				stats["users_affected"] += 1
+				queue[user.uuid] = []
+			queue[user.uuid].append(data.report)
+			stats["messages_queued"] += 1
+
+	for user in queue:
+		send_message(api.get_user(uuid=user), queue[user])
+	send_message(zero_user, messages.success['worker_finish'].format(**stats), token_size=3)
+	logging.info(f"Ordem de apuração concluida ✅. {stats['places_checked']} lugares apurados, {stats['messages_queued']} boletins gerados e {stats['users_affected']} usuários afetados.")
+	utils.notify(f"<b>SAB</b> - Ordem de apuração concluida ✅. {stats['places_checked']} lugares apurados, {stats['messages_queued']} boletins gerados e {stats['users_affected']} usuários afetados.")
+
 # retrieve_report - Responsable for retrieving the place's data in the background.
 @tasks.thread_function
 def retrieve_report(user, name, code=False):
+	threading.current_thread().name = "Report Worker"
 	messages = Messages()
 	if not code:
 		query = api.resolve_name(name)
@@ -61,7 +88,7 @@ def define_place(user, place):
 	if place not in user.places:
 		user.places.append(place)
 		user.flush_info()
-	if not len(user.places):
+	if len(user.places) == 1:
 		return messages.success['first_register'].format(place=place_data['name'])
 
 	return messages.success['add_place'].format(place=place_data['name'])
@@ -72,7 +99,6 @@ def remove_place(user, place):
 	if place in user.places:
 		user.places.remove(place)
 		user.flush_info()
-
 	return messages.success['remove_place'].format(place=place_data['name'])
 
 
@@ -202,6 +228,17 @@ def message_handler(event):
 		api.delete_user(user)
 		return messages.success["delete"]
 
+	elif utils.check_match("notify", args[0]) and user.has_permission("actions.local_notification"):
+		if len(args) > 1:
+			utils.notify(" ".join(args[1:]))
+			return ""
+		else:
+			return messages.errors["wrong_usage"].format(command=args[0], usage="_mensagem_", example_arguments="Olá Mundo!")
+
+	elif utils.check_match("worker", args[0]) and user.has_permission("actions.run_worker"):
+		worker(user)
+		return messages.flow["generic_wait"]
+
 	elif utils.check_match("parciais", args[0]) or utils.check_match("boletim", args[0]):
 		if len(args) > 1:
 			retrieve_report(user, " ".join(args[1:]))
@@ -209,7 +246,10 @@ def message_handler(event):
 			return messages.errors["wrong_usage"].format(command=args[0], usage="_local_", example_arguments="São Paulo")
 		return messages.flow["report_build"]
 	else:
-		return [messages.errors["not_found"].format(command=args[0])]+["💁‍ ```Comandos disponíveis:```",
+		output = []
+		if not utils.check_match("comandos", args[0]):
+			output = [messages.errors["not_found"].format(command=args[0])]
+		output += ["💁‍ ```Comandos disponíveis:```",
 		("👉 ```ping``` - Responde 'pong' _(use-o para verificar se estou respondendo corretamente!)_\n"
 		"👉 ```boletim``` - Envia o boletim da região que desejar.\n"
 		"👉 ```remover``` - Remove um local da sua lista.\n"
@@ -218,3 +258,4 @@ def message_handler(event):
 		"👉 ```cancelar``` - Cancela a sua inscrição.\n"
 		"👉 ```metodologia``` - Mostra a metodologia.")
 		]
+		return output

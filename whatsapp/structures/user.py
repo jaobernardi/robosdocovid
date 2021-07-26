@@ -31,6 +31,29 @@ class User:
 		import api
 		api.update_user(self)
 
+	def has_permission(self, permission):
+		possible = list(self.permissions)
+		match_tokens = permission.split(".")
+
+		while len(possible) > 0:
+			for perm in possible:
+				test_tokens = perm.split(".")
+				index = 0
+				for token in test_tokens:
+					if match_tokens[index] == "*":
+						return True
+					if token == "*":
+						return True
+					if token != match_tokens[index]:
+						possible.remove(perm)
+						break
+					if index+1 == len(test_tokens) and index+1 == len(match_tokens):
+						return True
+					if index+1 >= len(match_tokens):
+						possible.remove(perm)
+						break
+					index += 1
+		return False
 
 class Context(object):
 
